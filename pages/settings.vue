@@ -193,7 +193,8 @@ export default {
         autoSleepTimerAutoRewindTime: 300000, // 5 minutes
         languageCode: 'en-us',
         downloadUsingCellular: 'ALWAYS',
-        streamingUsingCellular: 'ALWAYS'
+        streamingUsingCellular: 'ALWAYS',
+        dateFormat: 'dd/MM/yyyy'
       },
       theme: 'dark',
       lockCurrentOrientation: false,
@@ -327,6 +328,22 @@ export default {
         }
       ]
     },
+    dateFormatOptionItems() {
+      return [
+        {
+          text: 'MM/DD/YYYY',
+          value: 'MM/dd/yyyy'
+        },
+        {
+          text: 'DD/MM/YYYY',
+          value: 'dd/MM/yyyy'
+        },
+        {
+          text: 'YYYY-MM-DD',
+          value: 'yyyy-MM-dd'
+        }
+      ]
+    },
     currentJumpForwardTimeIcon() {
       return this.jumpForwardItems[this.currentJumpForwardTimeIndex].icon
     },
@@ -352,6 +369,9 @@ export default {
     languageOption() {
       return this.languageOptionItems.find((i) => i.value === this.settings.languageCode)?.text || ''
     },
+    dateFormatOption() {
+      return this.dateFormatOptionItems.find((i) => i.value === this.settings.dateFormat)?.text || ''
+    },
     themeOption() {
       return this.themeOptionItems.find((i) => i.value === this.theme)?.text || ''
     },
@@ -376,6 +396,7 @@ export default {
       if (this.moreMenuSetting === 'shakeSensitivity') return this.shakeSensitivityItems
       else if (this.moreMenuSetting === 'hapticFeedback') return this.hapticFeedbackItems
       else if (this.moreMenuSetting === 'language') return this.languageOptionItems
+      else if (this.moreMenuSetting === 'dateFormat') return this.dateFormatOptionItems
       else if (this.moreMenuSetting === 'theme') return this.themeOptionItems
       else if (this.moreMenuSetting === 'downloadUsingCellular') return this.downloadUsingCellularItems
       else if (this.moreMenuSetting === 'streamingUsingCellular') return this.streamingUsingCellularItems
@@ -409,6 +430,10 @@ export default {
       this.moreMenuSetting = 'language'
       this.showMoreMenuDialog = true
     },
+    showDateFormatOptions() {
+      this.moreMenuSetting = 'dateFormat'
+      this.showMoreMenuDialog = true
+    },
     showThemeOptions() {
       this.moreMenuSetting = 'theme'
       this.showMoreMenuDialog = true
@@ -435,6 +460,9 @@ export default {
       } else if (this.moreMenuSetting === 'theme') {
         this.theme = action
         this.saveTheme(action)
+      } else if (this.moreMenuSetting === 'dateFormat') {
+        this.settings.dateFormat = action
+        // this.saveTheme(action)
       } else if (this.moreMenuSetting === 'downloadUsingCellular') {
         this.settings.downloadUsingCellular = action
         this.saveSettings()
