@@ -33,6 +33,13 @@
         <ui-text-input :value="themeOption" readonly append-icon="expand_more" style="max-width: 200px" />
       </div>
     </div>
+    <div class="py-3 flex items-center">
+      <p class="pr-4 w-36">Date Format</p>
+      <div @click.stop="showDateFormatOptions">
+        <ui-text-input :value="dateFormatOption" readonly append-icon="expand_more" style="max-width: 200px" />
+      </div>
+      <p class="pl-4 text-fg-muted text-xs">{{ this.settings.dateFormat}}</p>
+    </div>
 
     <!-- Playback settings -->
     <p class="uppercase text-xs font-semibold text-fg-muted mb-2 mt-10">{{ $strings.HeaderPlaybackSettings }}</p>
