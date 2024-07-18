@@ -1,13 +1,5 @@
 <template>
   <div class="w-full h-full min-h-full relative">
-    <div v-if="attemptingConnection" class="w-full pt-4 flex items-center justify-center">
-      <widgets-loading-spinner />
-      <p class="pl-4">{{ $strings.MessageAttemptingServerConnection }}</p>
-    </div>
-    <div v-if="shelves.length && isLoading" class="w-full pt-4 flex items-center justify-center">
-      <widgets-loading-spinner />
-      <p class="pl-4">{{ $strings.MessageLoadingServerData }}</p>
-    </div>
 
     <div class="w-full" :class="{ 'py-6': altViewEnabled }">
       <template v-for="(shelf, index) in shelves">
@@ -33,6 +25,14 @@
     </div>
     <div v-else-if="!shelves.length && isLoading && !attemptingConnection" class="absolute top-0 left-0 z-50 w-full h-full flex items-center justify-center">
       <ui-loading-indicator :text="$strings.MessageLoading" />
+    </div>
+    <div v-if="attemptingConnection" class="w-full pt-4 flex items-center justify-center">
+      <widgets-loading-spinner />
+      <p class="pl-4">{{ $strings.MessageAttemptingServerConnection }}</p>
+    </div>
+    <div v-if="shelves.length && isLoading" class="w-full pt-4 flex items-center justify-center">
+      <widgets-loading-spinner />
+      <p class="pl-4">{{ $strings.MessageLoadingServerData }}</p>
     </div>
   </div>
 </template>
