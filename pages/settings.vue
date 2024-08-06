@@ -37,8 +37,8 @@
       <p class="pr-4 w-36">Date Format</p>
       <div @click.stop="showDateFormatOptions">
         <ui-text-input :value="dateFormatOption" readonly append-icon="expand_more" style="max-width: 200px" />
+        <p class="text-xs ml-1 text-white text-opacity-60">{{ $strings.LabelExample }}: {{ dateExample }}</p>
       </div>
-      <p class="pl-4 text-fg-muted text-xs">{{ this.settings.dateFormat}}</p>
     </div>
 
     <!-- Playback settings -->
@@ -370,6 +370,9 @@ export default {
           value: 'dd MMMM yyyy'
         }
       ]
+    },
+    dateExample() {
+      return this.$formatDate(Date.now(), this.settings.dateFormat)
     },
     currentJumpForwardTimeIcon() {
       return this.jumpForwardItems[this.currentJumpForwardTimeIndex].icon
