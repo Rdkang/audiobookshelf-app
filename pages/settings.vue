@@ -469,7 +469,7 @@ export default {
         this.saveTheme(action)
       } else if (this.moreMenuSetting === 'dateFormat') {
         this.settings.dateFormat = action
-        // this.saveTheme(action)
+        this.saveSettings()
       } else if (this.moreMenuSetting === 'downloadUsingCellular') {
         this.settings.downloadUsingCellular = action
         this.saveSettings()
@@ -611,6 +611,7 @@ export default {
 
       this.settings.downloadUsingCellular = deviceSettings.downloadUsingCellular || 'ALWAYS'
       this.settings.streamingUsingCellular = deviceSettings.streamingUsingCellular || 'ALWAYS'
+      this.settings.dateFormat = deviceSettings.dateFormat || 'dd/MM/yyyy'
     },
     async init() {
       this.loading = true
