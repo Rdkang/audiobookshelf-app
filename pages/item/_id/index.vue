@@ -72,7 +72,7 @@
           <div v-if="!isPodcast && progressPercent > 0" class="px-4 py-2 bg-primary text-sm font-semibold rounded-md text-fg mt-4 text-center">
             <p>{{ $strings.LabelYourProgress }}: {{ Math.round(progressPercent * 100) }}%</p>
             <p v-if="!useEBookProgress && !userIsFinished" class="text-fg-muted text-xs">{{ $getString('LabelTimeRemaining', [$elapsedPretty(userTimeRemaining)]) }}</p>
-            <p v-else-if="userIsFinished" class="text-fg-muted text-xs">{{ $strings.LabelFinished }} {{ $formatDate(userProgressFinishedAt, dateFormat2) }}</p>
+            <p v-else-if="userIsFinished" class="text-fg-muted text-xs">{{ $strings.LabelFinished }} {{ $formatDate(userProgressFinishedAt, dateFormat) }}</p>
           </div>
         </div>
 
@@ -226,12 +226,6 @@ export default {
   computed: {
     isIos() {
       return this.$platform === 'ios'
-    },
-    dateFormat2() {
-      // return this.$store.state.dateFormat
-      // return this.$store.getters['globals/getDateFormat']
-      // return this.$store.state.settings.dateFormat
-      return this.$store.getters['getDateFormat']
     },
     userCanDownload() {
       return this.$store.getters['user/getUserCanDownload']
@@ -492,6 +486,9 @@ export default {
     },
     coverHeight() {
       return this.coverWidth * this.bookCoverAspectRatio
+    },
+    dateFormat() {
+      return this.$store.getters.getDateFormat
     }
   },
   methods: {

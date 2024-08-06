@@ -64,7 +64,7 @@ export const getters = {
     return state.serverSettings[key]
   },
   getDateFormat: state => {
-    if (!state.deviceData?.deviceSettings) return 'yyyy/MM/dd'
+    if (!state.deviceData?.deviceSettings) return 'MM/dd/yyyy'
     return state.deviceData.deviceSettings.dateFormat
   },
   getJumpForwardTime: state => {
