@@ -201,7 +201,7 @@ export default {
         languageCode: 'en-us',
         downloadUsingCellular: 'ALWAYS',
         streamingUsingCellular: 'ALWAYS',
-        dateFormat: 'dd/MM/yyyy'
+        dateFormat: 'MM/dd/yyyy'
       },
       theme: 'dark',
       lockCurrentOrientation: false,
@@ -346,8 +346,8 @@ export default {
           value: 'dd/MM/yyyy'
         },
         {
-          text: 'YYYY-MM-DD',
-          value: 'yyyy-MM-dd'
+          text: 'YYYY/MM/DD',
+          value: 'yyyy/MM/dd'
         }
       ]
     },
@@ -611,7 +611,7 @@ export default {
 
       this.settings.downloadUsingCellular = deviceSettings.downloadUsingCellular || 'ALWAYS'
       this.settings.streamingUsingCellular = deviceSettings.streamingUsingCellular || 'ALWAYS'
-      this.settings.dateFormat = deviceSettings.dateFormat || 'dd/MM/yyyy'
+      this.settings.dateFormat = deviceSettings.dateFormat || 'MM/dd/yyyy'
     },
     async init() {
       this.loading = true
