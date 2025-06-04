@@ -10,14 +10,14 @@
         <template v-for="(episode, index) in episodes">
           <div :key="index" class="relative" :class="itemEpisodeMap[episode.enclosure.url] ? 'bg-primary bg-opacity-40' : selectedEpisodes[String(index)] ? 'bg-success bg-opacity-10' : index % 2 == 0 ? 'bg-primary bg-opacity-25' : 'bg-primary bg-opacity-5'" @click="selectEpisode(episode, index)">
             <div class="absolute top-0 left-0 h-full flex items-center p-2">
-              <span v-if="itemEpisodeMap[episode.enclosure.url]" class="material-icons text-success text-xl">download_done</span>
+              <span v-if="itemEpisodeMap[episode.enclosure.url]" class="material-symbols text-success text-xl">download_done</span>
               <ui-checkbox v-else v-model="selectedEpisodes[String(index)]" small checkbox-bg="primary" border-color="gray-600" />
             </div>
             <div class="pl-9 pr-2 py-2 border-b border-white border-opacity-10">
               <p v-if="episode.episode" class="font-semibold text-gray-200 text-xs">#{{ episode.episode }}</p>
               <p class="break-words mb-1 text-sm">{{ episode.title }}</p>
               <p v-if="episode.subtitle" class="break-words mb-1 text-xs text-gray-300 episode-subtitle">{{ episode.subtitle }}</p>
-              <p class="text-xxs text-gray-300">Published {{ episode.publishedAt ? $dateDistanceFromNow(episode.publishedAt) : 'Unknown' }}</p>
+              <p class="text-xxs text-gray-300">{{ $getString('LabelPublishedDate', [episode.publishedAt ? $dateDistanceFromNow(episode.publishedAt) : $strings.LabelUnknown]) }}</p>
             </div>
           </div>
         </template>

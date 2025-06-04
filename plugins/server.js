@@ -10,6 +10,8 @@ class ServerSocket extends EventEmitter {
     this.connected = false
     this.serverAddress = null
     this.token = null
+
+    this.lastReconnectAttemptTime = 0
   }
 
   $on(evt, callback) {
@@ -26,14 +28,19 @@ class ServerSocket extends EventEmitter {
     this.serverAddress = serverAddress
     this.token = token
 
-    console.log('[SOCKET] Connect Socket', this.serverAddress)
+    const serverUrl = new URL(serverAddress)
+    const serverHost = `${serverUrl.protocol}//${serverUrl.host}`
+    const serverPath = serverUrl.pathname === '/' ? '' : serverUrl.pathname
+
+    console.log(`[SOCKET] Connecting to ${serverHost} with path ${serverPath}/socket.io`)
 
     const socketOptions = {
       transports: ['websocket'],
       upgrade: false,
-      // reconnectionAttempts: 3
+      path: `${serverPath}/socket.io`,
+      reconnectionDelayMax: 15000
     }
-    this.socket = io(this.serverAddress, socketOptions)
+    this.socket = io(serverHost, socketOptions)
     this.setSocketListeners()
   }
 
@@ -49,6 +56,9 @@ class ServerSocket extends EventEmitter {
     this.socket.on('user_updated', this.onUserUpdated.bind(this))
     this.socket.on('user_item_progress_updated', this.onUserItemProgressUpdated.bind(this))
     this.socket.on('playlist_added', this.onPlaylistAdded.bind(this))
+    this.socket.io.on('reconnect_attempt', this.onReconnectAttempt.bind(this))
+    this.socket.io.on('reconnect_error', this.onReconnectError.bind(this))
+    this.socket.io.on('reconnect_failed', this.onReconnectFailed.bind(this))
   }
 
   removeListeners() {
@@ -65,6 +75,20 @@ class ServerSocket extends EventEmitter {
     this.$store.commit('setSocketConnected', true)
     this.emit('connection-update', true)
     this.socket.emit('auth', this.token) // Required to connect a user with their socket
+  }
+
+  onReconnectAttempt(attemptNumber) {
+    const timeSinceLastReconnectAttempt = this.lastReconnectAttemptTime ? Date.now() - this.lastReconnectAttemptTime : 0
+    this.lastReconnectAttemptTime = Date.now()
+    console.log(`[SOCKET] Reconnect attempt ${attemptNumber} ${timeSinceLastReconnectAttempt > 0 ? `after ${timeSinceLastReconnectAttempt}ms` : ''}`)
+  }
+
+  onReconnectError(error) {
+    console.log('[SOCKET] Reconnect error', error)
+  }
+
+  onReconnectFailed(error) {
+    console.log('[SOCKET] Reconnect failed', error)
   }
 
   onDisconnect(reason) {

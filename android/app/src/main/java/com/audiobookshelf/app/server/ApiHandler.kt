@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import android.util.Base64
 import android.util.Log
 import com.audiobookshelf.app.data.*
 import com.audiobookshelf.app.device.DeviceManager
@@ -12,6 +13,7 @@ import com.audiobookshelf.app.media.MediaProgressSyncData
 import com.audiobookshelf.app.media.SyncResult
 import com.audiobookshelf.app.models.User
 import com.audiobookshelf.app.BuildConfig
+import com.audiobookshelf.app.plugins.AbsLogger
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.core.json.JsonReadFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -44,10 +46,17 @@ class ApiHandler(var ctx:Context) {
     val address = config?.address ?: DeviceManager.serverAddress
     val token = config?.token ?: DeviceManager.token
 
-    val request = Request.Builder()
-      .url("${address}$endpoint").addHeader("Authorization", "Bearer $token")
-      .build()
-    makeRequest(request, httpClient, cb)
+    try {
+      val request = Request.Builder()
+        .url("${address}$endpoint").addHeader("Authorization", "Bearer $token")
+        .build()
+      makeRequest(request, httpClient, cb)
+    } catch(e: Exception) {
+      e.printStackTrace()
+      val jsobj = JSObject()
+      jsobj.put("error", "Request failed: ${e.message}")
+      cb(jsobj)
+    }
   }
 
   private fun postRequest(endpoint:String, payload: JSObject?, config:ServerConnectionConfig?, cb: (JSObject) -> Unit) {
@@ -57,23 +66,38 @@ class ApiHandler(var ctx:Context) {
     val requestBody = payload?.toString()?.toRequestBody(mediaType) ?: EMPTY_REQUEST
     val requestUrl = "${address}$endpoint"
     Log.d(tag, "postRequest to $requestUrl")
-    val request = Request.Builder().post(requestBody)
-      .url(requestUrl).addHeader("Authorization", "Bearer ${token}")
-      .build()
-    makeRequest(request, null, cb)
+    try {
+      val request = Request.Builder().post(requestBody)
+        .url(requestUrl).addHeader("Authorization", "Bearer ${token}")
+        .build()
+      makeRequest(request, null, cb)
+    } catch(e: Exception) {
+      e.printStackTrace()
+      val jsobj = JSObject()
+      jsobj.put("error", "Request failed: ${e.message}")
+      cb(jsobj)
+    }
   }
 
   private fun patchRequest(endpoint:String, payload: JSObject, cb: (JSObject) -> Unit) {
     val mediaType = "application/json; charset=utf-8".toMediaType()
     val requestBody = payload.toString().toRequestBody(mediaType)
-    val request = Request.Builder().patch(requestBody)
-      .url("${DeviceManager.serverAddress}$endpoint").addHeader("Authorization", "Bearer ${DeviceManager.token}")
-      .build()
-    makeRequest(request, null, cb)
+    try {
+      val request = Request.Builder().patch(requestBody)
+        .url("${DeviceManager.serverAddress}$endpoint").addHeader("Authorization", "Bearer ${DeviceManager.token}")
+        .build()
+      makeRequest(request, null, cb)
+    } catch(e: Exception) {
+      e.printStackTrace()
+      val jsobj = JSObject()
+      jsobj.put("error", "Request failed: ${e.message}")
+      cb(jsobj)
+    }
   }
 
   private fun makeRequest(request:Request, httpClient:OkHttpClient?, cb: (JSObject) -> Unit) {
     val client = httpClient ?: defaultClient
+
     client.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
         Log.d(tag, "FAILURE TO CONNECT")
@@ -132,7 +156,7 @@ class ApiHandler(var ctx:Context) {
 
   fun getLibraries(cb: (List<Library>) -> Unit) {
     val mapper = jacksonMapper
-    getRequest("/api/libraries", null,null) {
+    getRequest("/api/libraries?include=stats", null,null) {
       val libraries = mutableListOf<Library>()
 
       var array = JSONArray()
@@ -146,6 +170,23 @@ class ApiHandler(var ctx:Context) {
         libraries.add(mapper.readValue(array.get(i).toString()))
       }
       cb(libraries)
+    }
+  }
+
+  fun getLibraryPersonalized(libraryItemId:String, cb: (List<LibraryShelfType>?) -> Unit) {
+    getRequest("/api/libraries/$libraryItemId/personalized", null, null) {
+      if (it.has("error")) {
+        Log.e(tag, it.getString("error") ?: "getLibraryStats Failed")
+        cb(null)
+      } else {
+        val items = mutableListOf<LibraryShelfType>()
+        val array = it.getJSONArray("value")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibraryShelfType>(array.get(i).toString())
+          items.add(item)
+        }
+        cb(items)
+      }
     }
   }
 
@@ -189,6 +230,103 @@ class ApiHandler(var ctx:Context) {
     }
   }
 
+  fun getLibrarySeries(libraryId:String, cb: (List<LibrarySeriesItem>) -> Unit) {
+    Log.d(tag, "Getting series")
+    getRequest("/api/libraries/$libraryId/series?minified=1&sort=name&limit=10000", null, null) {
+      val items = mutableListOf<LibrarySeriesItem>()
+      if (it.has("results")) {
+        val array = it.getJSONArray("results")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibrarySeriesItem>(array.get(i).toString())
+          items.add(item)
+        }
+      }
+      cb(items)
+    }
+  }
+
+  fun getLibrarySeriesItems(libraryId:String, seriesId:String, cb: (List<LibraryItem>) -> Unit) {
+    Log.d(tag, "Getting items for series")
+    val seriesIdBase64 = Base64.encodeToString(seriesId.toByteArray(), Base64.DEFAULT)
+    getRequest("/api/libraries/$libraryId/items?minified=1&sort=media.metadata.title&filter=series.${seriesIdBase64}&limit=1000", null, null) {
+      val items = mutableListOf<LibraryItem>()
+      if (it.has("results")) {
+        val array = it.getJSONArray("results")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibraryItem>(array.get(i).toString())
+          items.add(item)
+        }
+      }
+      cb(items)
+    }
+  }
+
+  fun getLibraryAuthors(libraryId:String, cb: (List<LibraryAuthorItem>) -> Unit) {
+    Log.d(tag, "Getting series")
+    getRequest("/api/libraries/$libraryId/authors", null, null) {
+      val items = mutableListOf<LibraryAuthorItem>()
+      if (it.has("authors")) {
+        val array = it.getJSONArray("authors")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibraryAuthorItem>(array.get(i).toString())
+          items.add(item)
+        }
+      }else{
+        Log.e(tag, "No results")
+      }
+      cb(items)
+    }
+  }
+
+  fun getLibraryItemsFromAuthor(libraryId:String, authorId:String, cb: (List<LibraryItem>) -> Unit) {
+    Log.d(tag, "Getting author items")
+    val authorIdBase64 = Base64.encodeToString(authorId.toByteArray(), Base64.DEFAULT)
+    getRequest("/api/libraries/$libraryId/items?limit=1000&minified=1&filter=authors.${authorIdBase64}&sort=media.metadata.title&collapseseries=1", null, null) {
+      val items = mutableListOf<LibraryItem>()
+      if (it.has("results")) {
+        val array = it.getJSONArray("results")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibraryItem>(array.get(i).toString())
+          if (item.collapsedSeries != null) {
+            item.collapsedSeries?.libraryId = libraryId
+          }
+          items.add(item)
+        }
+      }else{
+        Log.e(tag, "No results")
+      }
+      cb(items)
+    }
+  }
+
+  fun getLibraryCollections(libraryId:String, cb: (List<LibraryCollection>) -> Unit) {
+    Log.d(tag, "Getting collections")
+    getRequest("/api/libraries/$libraryId/collections?minified=1&sort=name&limit=1000", null, null) {
+      val items = mutableListOf<LibraryCollection>()
+      if (it.has("results")) {
+        val array = it.getJSONArray("results")
+        for (i in 0 until array.length()) {
+          val item = jacksonMapper.readValue<LibraryCollection>(array.get(i).toString())
+          items.add(item)
+        }
+      }
+      cb(items)
+    }
+  }
+
+  fun getSearchResults(libraryId:String, queryString:String, cb: (LibraryItemSearchResultType?) -> Unit) {
+    Log.d(tag, "Doing search for library $libraryId")
+    getRequest("/api/libraries/$libraryId/search?q=$queryString", null, null) {
+      if (it.has("error")) {
+        Log.e(tag, it.getString("error") ?: "getSearchResults Failed")
+        cb(null)
+      } else {
+        val librarySearchResults = jacksonMapper.readValue<LibraryItemSearchResultType>(it.toString())
+        cb(librarySearchResults)
+      }
+    }
+  }
+
   fun getAllItemsInProgress(cb: (List<ItemInProgress>) -> Unit) {
     getRequest("/api/me/items-in-progress", null, null) {
       val items = mutableListOf<ItemInProgress>()
@@ -196,8 +334,7 @@ class ApiHandler(var ctx:Context) {
         val array = it.getJSONArray("libraryItems")
         for (i in 0 until array.length()) {
           val jsobj = array.get(i) as JSONObject
-
-          val itemInProgress = ItemInProgress.makeFromServerObject(jsobj)
+          val itemInProgress = ItemInProgress.makeFromServerObject(jsobj, jacksonMapper)
           items.add(itemInProgress)
         }
       }
@@ -297,9 +434,9 @@ class ApiHandler(var ctx:Context) {
     }
   }
 
-  fun closePlaybackSession(playbackSessionId:String, cb: (Boolean) -> Unit) {
+  fun closePlaybackSession(playbackSessionId:String, config:ServerConnectionConfig?, cb: (Boolean) -> Unit) {
     Log.d(tag, "closePlaybackSession: playbackSessionId=$playbackSessionId")
-    postRequest("/api/session/$playbackSessionId/close", null, null) {
+    postRequest("/api/session/$playbackSessionId/close", null, config) {
       cb(true)
     }
   }
@@ -331,22 +468,27 @@ class ApiHandler(var ctx:Context) {
     val deviceInfo = DeviceInfo(deviceId, Build.MANUFACTURER, Build.MODEL, Build.VERSION.SDK_INT, BuildConfig.VERSION_NAME)
 
     val payload = JSObject(jacksonMapper.writeValueAsString(LocalSessionsSyncRequestPayload(playbackSessions, deviceInfo)))
-    Log.d(tag, "Sending ${playbackSessions.size} saved local playback sessions to server")
+    AbsLogger.info("ApiHandler", "sendSyncLocalSessions: Sending ${playbackSessions.size} saved local playback sessions to server (${DeviceManager.serverConnectionConfigName})")
+
     postRequest("/api/session/local-all", payload, null) {
       if (!it.getString("error").isNullOrEmpty()) {
-        Log.e(tag, "Failed to sync local sessions")
+        AbsLogger.error("ApiHandler", "sendSyncLocalSessions: Failed to sync local sessions. (${it.getString("error")})")
         cb(false, it.getString("error"))
       } else {
         val response = jacksonMapper.readValue<LocalSessionsSyncResponsePayload>(it.toString())
         response.results.forEach { localSessionSyncResult ->
           Log.d(tag, "Synced session result ${localSessionSyncResult.id}|${localSessionSyncResult.progressSynced}|${localSessionSyncResult.success}")
+
           playbackSessions.find { ps -> ps.id == localSessionSyncResult.id }?.let { session ->
             if (localSessionSyncResult.progressSynced == true) {
               val syncResult = SyncResult(true, true, "Progress synced on server")
               MediaEventManager.saveEvent(session, syncResult)
-              Log.i(tag, "Successfully synced session ${session.displayTitle} with server")
+
+              AbsLogger.info("ApiHandler", "sendSyncLocalSessions: Synced session \"${session.displayTitle}\" with server, server progress was updated for item ${session.mediaItemId}")
             } else if (!localSessionSyncResult.success) {
-              Log.e(tag, "Failed to sync session ${session.displayTitle} with server. Error: ${localSessionSyncResult.error}")
+              AbsLogger.error("ApiHandler", "sendSyncLocalSessions: Failed to sync session \"${session.displayTitle}\" with server. Error: ${localSessionSyncResult.error}")
+            } else {
+              AbsLogger.info("ApiHandler", "sendSyncLocalSessions: Synced session \"${session.displayTitle}\" with server. Server progress was up-to-date for item ${session.mediaItemId}")
             }
           }
         }
@@ -356,37 +498,72 @@ class ApiHandler(var ctx:Context) {
   }
 
   fun syncLocalMediaProgressForUser(cb: () -> Unit) {
+    AbsLogger.info("ApiHandler", "[ApiHandler] syncLocalMediaProgressForUser: Server connection ${DeviceManager.serverConnectionConfigName}")
+
     // Get all local media progress for this server
     val allLocalMediaProgress = DeviceManager.dbManager.getAllLocalMediaProgress().filter { it.serverConnectionConfigId == DeviceManager.serverConnectionConfigId }
     if (allLocalMediaProgress.isEmpty()) {
-      Log.d(tag, "No local media progress to sync")
+      AbsLogger.info("ApiHandler", "[ApiHandler] syncLocalMediaProgressForUser: No local media progress to sync")
       return cb()
     }
 
-    getCurrentUser { _user ->
-      _user?.let { user->
+    AbsLogger.info("ApiHandler", "syncLocalMediaProgressForUser: Found ${allLocalMediaProgress.size} local media progress")
+
+    getCurrentUser { user ->
+      if (user == null) {
+        AbsLogger.error("ApiHandler", "syncLocalMediaProgressForUser: Failed to load user from server (${DeviceManager.serverConnectionConfigName})")
+      } else {
+        var numLocalMediaProgressUptToDate = 0
+        var numLocalMediaProgressUpdated = 0
+
         // Compare server user progress with local progress
         user.mediaProgress.forEach { mediaProgress ->
           // Get matching local media progress
           allLocalMediaProgress.find { it.isMatch(mediaProgress) }?.let { localMediaProgress ->
             if (mediaProgress.lastUpdate > localMediaProgress.lastUpdate) {
-              Log.d(tag, "Server progress for media item id=\"${mediaProgress.mediaItemId}\" is more recent then local. Updating local current time ${localMediaProgress.currentTime} to ${mediaProgress.currentTime}")
+              val updateLogs = mutableListOf<String>()
+              if (mediaProgress.progress != localMediaProgress.progress) {
+                updateLogs.add("Updated progress from ${localMediaProgress.progress} to ${mediaProgress.progress}")
+              }
+              if (mediaProgress.currentTime != localMediaProgress.currentTime) {
+                updateLogs.add("Updated currentTime from ${localMediaProgress.currentTime} to ${mediaProgress.currentTime}")
+              }
+              if (mediaProgress.isFinished != localMediaProgress.isFinished) {
+                updateLogs.add("Updated isFinished from ${localMediaProgress.isFinished} to ${mediaProgress.isFinished}")
+              }
+              if (mediaProgress.ebookProgress != localMediaProgress.ebookProgress) {
+                updateLogs.add("Updated ebookProgress from ${localMediaProgress.isFinished} to ${mediaProgress.isFinished}")
+              }
+              if (updateLogs.isNotEmpty()) {
+                AbsLogger.info("ApiHandler", "syncLocalMediaProgressForUser: Server progress for item \"${mediaProgress.mediaItemId}\" is more recent than local (server lastUpdate=${mediaProgress.lastUpdate}, local lastUpdate=${localMediaProgress.lastUpdate}). ${updateLogs.joinToString()}")
+              }
+
               localMediaProgress.updateFromServerMediaProgress(mediaProgress)
-              MediaEventManager.syncEvent(mediaProgress, "Sync on server connection")
+
+              // Only report sync if progress changed
+              if (updateLogs.isNotEmpty()) {
+                MediaEventManager.syncEvent(mediaProgress, "Sync on server connection")
+              }
               DeviceManager.dbManager.saveLocalMediaProgress(localMediaProgress)
+              numLocalMediaProgressUpdated++
             } else if (localMediaProgress.lastUpdate > mediaProgress.lastUpdate && localMediaProgress.ebookLocation != null && localMediaProgress.ebookLocation != mediaProgress.ebookLocation) {
               // Patch ebook progress to server
+              AbsLogger.info("ApiHandler", "syncLocalMediaProgressForUser: Local progress for ebook item \"${mediaProgress.mediaItemId}\" is more recent than server progress. Local progress last updated ${localMediaProgress.lastUpdate}, server progress last updated ${mediaProgress.lastUpdate}. Sending server request to update ebook progress from ${mediaProgress.ebookProgress} to ${localMediaProgress.ebookProgress}")
               val endpoint = "/api/me/progress/${localMediaProgress.libraryItemId}"
               val updatePayload = JSObject()
               updatePayload.put("ebookLocation", localMediaProgress.ebookLocation)
               updatePayload.put("ebookProgress", localMediaProgress.ebookProgress)
               updatePayload.put("lastUpdate", localMediaProgress.lastUpdate)
               patchRequest(endpoint,updatePayload) {
-                Log.d(tag, "syncLocalMediaProgressForUser patched ebook progress")
+                AbsLogger.info("ApiHandler", "syncLocalMediaProgressForUser: Successfully updated server ebook progress for item item \"${mediaProgress.mediaItemId}\"")
               }
+            } else {
+              numLocalMediaProgressUptToDate++
             }
           }
         }
+
+        AbsLogger.info("ApiHandler", "syncLocalMediaProgressForUser: Finishing syncing local media progress with server. $numLocalMediaProgressUptToDate up-to-date, $numLocalMediaProgressUpdated updated")
       }
       cb()
     }

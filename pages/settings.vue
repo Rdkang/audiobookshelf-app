@@ -36,7 +36,7 @@
 
     <!-- Playback settings -->
     <p class="uppercase text-xs font-semibold text-fg-muted mb-2 mt-10">{{ $strings.HeaderPlaybackSettings }}</p>
-    <div v-if="!isiOS" class="flex items-center py-3">
+    <div class="flex items-center py-3">
       <div class="w-10 flex justify-center" @click="toggleDisableAutoRewind">
         <ui-toggle-switch v-model="settings.disableAutoRewind" @input="saveSettings" />
       </div>
@@ -44,13 +44,13 @@
     </div>
     <div class="flex items-center py-3">
       <div class="w-10 flex justify-center" @click="toggleJumpBackwards">
-        <span class="material-icons text-4xl">{{ currentJumpBackwardsTimeIcon }}</span>
+        <span class="material-symbols text-4xl">{{ currentJumpBackwardsTimeIcon }}</span>
       </div>
       <p class="pl-4">{{ $strings.LabelJumpBackwardsTime }}</p>
     </div>
     <div class="flex items-center py-3">
       <div class="w-10 flex justify-center" @click="toggleJumpForward">
-        <span class="material-icons text-4xl">{{ currentJumpForwardTimeIcon }}</span>
+        <span class="material-symbols text-4xl">{{ currentJumpForwardTimeIcon }}</span>
       </div>
       <p class="pl-4">{{ $strings.LabelJumpForwardsTime }}</p>
     </div>
@@ -59,7 +59,7 @@
         <ui-toggle-switch v-model="settings.enableMp3IndexSeeking" @input="saveSettings" />
       </div>
       <p class="pl-4">{{ $strings.LabelEnableMp3IndexSeeking }}</p>
-      <span class="material-icons-outlined ml-2" @click.stop="showConfirmMp3IndexSeeking">info</span>
+      <span class="material-symbols text-xl ml-2" @click.stop="showConfirmMp3IndexSeeking">info</span>
     </div>
     <div class="flex items-center py-3">
       <div class="w-10 flex justify-center" @click="toggleAllowSeekingOnMediaControls">
@@ -76,7 +76,7 @@
           <ui-toggle-switch v-model="settings.disableShakeToResetSleepTimer" @input="saveSettings" />
         </div>
         <p class="pl-4">{{ $strings.LabelDisableShakeToReset }}</p>
-        <span class="material-icons-outlined ml-2" @click.stop="showInfo('disableShakeToResetSleepTimer')">info</span>
+        <span class="material-symbols text-xl ml-2" @click.stop="showInfo('disableShakeToResetSleepTimer')">info</span>
       </div>
       <div v-if="!settings.disableShakeToResetSleepTimer" class="py-3 flex items-center">
         <p class="pr-4 w-36">{{ $strings.LabelShakeSensitivity }}</p>
@@ -84,26 +84,35 @@
           <ui-text-input :value="shakeSensitivityOption" readonly append-icon="expand_more" style="width: 145px; max-width: 145px" />
         </div>
       </div>
-      <div class="flex items-center py-3">
-        <div class="w-10 flex justify-center" @click="toggleDisableSleepTimerFadeOut">
-          <ui-toggle-switch v-model="settings.disableSleepTimerFadeOut" @input="saveSettings" />
-        </div>
-        <p class="pl-4">{{ $strings.LabelDisableAudioFadeOut }}</p>
-        <span class="material-icons-outlined ml-2" @click.stop="showInfo('disableSleepTimerFadeOut')">info</span>
+    </template>
+    <div class="flex items-center py-3">
+      <div class="w-10 flex justify-center" @click="toggleDisableSleepTimerFadeOut">
+        <ui-toggle-switch v-model="settings.disableSleepTimerFadeOut" @input="saveSettings" />
       </div>
+      <p class="pl-4">{{ $strings.LabelDisableAudioFadeOut }}</p>
+      <span class="material-symbols text-xl ml-2" @click.stop="showInfo('disableSleepTimerFadeOut')">info</span>
+    </div>
+    <template v-if="!isiOS">
       <div class="flex items-center py-3">
         <div class="w-10 flex justify-center" @click="toggleDisableSleepTimerResetFeedback">
           <ui-toggle-switch v-model="settings.disableSleepTimerResetFeedback" @input="saveSettings" />
         </div>
         <p class="pl-4">{{ $strings.LabelDisableVibrateOnReset }}</p>
-        <span class="material-icons-outlined ml-2" @click.stop="showInfo('disableSleepTimerResetFeedback')">info</span>
+        <span class="material-symbols text-xl ml-2" @click.stop="showInfo('disableSleepTimerResetFeedback')">info</span>
+      </div>
+      <div class="flex items-center py-3">
+        <div class="w-10 flex justify-center" @click="toggleSleepTimerAlmostDoneChime">
+          <ui-toggle-switch v-model="settings.enableSleepTimerAlmostDoneChime" @input="saveSettings" />
+        </div>
+        <p class="pl-4">{{ $strings.LabelSleepTimerAlmostDoneChime }}</p>
+        <span class="material-symbols text-xl ml-2" @click.stop="showInfo('enableSleepTimerAlmostDoneChime')">info</span>
       </div>
       <div class="flex items-center py-3">
         <div class="w-10 flex justify-center" @click="toggleAutoSleepTimer">
           <ui-toggle-switch v-model="settings.autoSleepTimer" @input="saveSettings" />
         </div>
         <p class="pl-4">{{ $strings.LabelAutoSleepTimer }}</p>
-        <span class="material-icons-outlined ml-2" @click.stop="showInfo('autoSleepTimer')">info</span>
+        <span class="material-symbols text-xl ml-2" @click.stop="showInfo('autoSleepTimer')">info</span>
       </div>
     </template>
     <!-- Auto Sleep timer settings -->
@@ -126,7 +135,7 @@
         <ui-toggle-switch v-model="settings.autoSleepTimerAutoRewind" @input="saveSettings" />
       </div>
       <p class="pl-4">{{ $strings.LabelAutoSleepTimerAutoRewind }}</p>
-      <span class="material-icons-outlined ml-2" @click.stop="showInfo('autoSleepTimerAutoRewind')">info</span>
+      <span class="material-symbols text-xl ml-2" @click.stop="showInfo('autoSleepTimerAutoRewind')">info</span>
     </div>
     <div v-if="settings.autoSleepTimerAutoRewind" class="py-3 flex items-center">
       <p class="pr-4 w-36">{{ $strings.LabelAutoRewindTime }}</p>
@@ -149,6 +158,22 @@
         <ui-text-input :value="streamingUsingCellularOption" readonly append-icon="expand_more" style="max-width: 200px" />
       </div>
     </div>
+
+    <!-- Android Auto settings -->
+    <template v-if="!isiOS">
+      <p class="uppercase text-xs font-semibold text-fg-muted mb-2 mt-10">{{ $strings.HeaderAndroidAutoSettings }}</p>
+      <div class="py-3 flex items-center">
+        <p class="pr-4 w-36">{{ $strings.LabelAndroidAutoBrowseLimitForGrouping }}</p>
+        <ui-text-input type="number" v-model="settings.androidAutoBrowseLimitForGrouping" style="width: 145px; max-width: 145px" @input="androidAutoBrowseLimitForGroupingUpdated" />
+        <span class="material-symbols text-xl ml-2" @click.stop="showInfo('androidAutoBrowseLimitForGrouping')">info</span>
+      </div>
+      <div class="py-3 flex items-center">
+        <p class="pr-4 w-36">{{ $strings.LabelAndroidAutoBrowseSeriesSequenceOrder }}</p>
+        <div @click.stop="showAndroidAutoBrowseSeriesSequenceOrderOptions">
+          <ui-text-input :value="androidAutoBrowseSeriesSequenceOrderOption" readonly append-icon="expand_more" style="max-width: 200px" />
+        </div>
+      </div>
+    </template>
 
     <div v-show="loading" class="w-full h-full absolute top-0 left-0 flex items-center justify-center z-10">
       <ui-loading-indicator />
@@ -189,11 +214,14 @@ export default {
         sleepTimerLength: 900000, // 15 minutes
         disableSleepTimerFadeOut: false,
         disableSleepTimerResetFeedback: false,
+        enableSleepTimerAlmostDoneChime: false,
         autoSleepTimerAutoRewind: false,
         autoSleepTimerAutoRewindTime: 300000, // 5 minutes
         languageCode: 'en-us',
         downloadUsingCellular: 'ALWAYS',
-        streamingUsingCellular: 'ALWAYS'
+        streamingUsingCellular: 'ALWAYS',
+        androidAutoBrowseLimitForGrouping: 100,
+        androidAutoBrowseSeriesSequenceOrder: 'ASC'
       },
       theme: 'dark',
       lockCurrentOrientation: false,
@@ -214,6 +242,10 @@ export default {
           name: this.$strings.LabelDisableVibrateOnReset,
           message: this.$strings.LabelDisableVibrateOnResetHelp
         },
+        enableSleepTimerAlmostDoneChime: {
+          name: this.$strings.LabelSleepTimerAlmostDoneChime,
+          message: this.$strings.LabelSleepTimerAlmostDoneChimeHelp
+        },
         autoSleepTimerAutoRewind: {
           name: this.$strings.LabelAutoSleepTimerAutoRewind,
           message: this.$strings.LabelAutoSleepTimerAutoRewindHelp
@@ -221,6 +253,10 @@ export default {
         enableMp3IndexSeeking: {
           name: this.$strings.LabelEnableMp3IndexSeeking,
           message: this.$strings.LabelEnableMp3IndexSeekingHelp
+        },
+        androidAutoBrowseLimitForGrouping: {
+          name: this.$strings.LabelAndroidAutoBrowseLimitForGrouping,
+          message: this.$strings.LabelAndroidAutoBrowseLimitForGroupingHelp
         }
       },
       hapticFeedbackItems: [
@@ -289,6 +325,16 @@ export default {
         {
           text: this.$strings.LabelNever,
           value: 'NEVER'
+        }
+      ],
+      androidAutoBrowseSeriesSequenceOrderItems: [
+        {
+          text: this.$strings.LabelSequenceAscending,
+          value: 'ASC'
+        },
+        {
+          text: this.$strings.LabelSequenceDescending,
+          value: 'DESC'
         }
       ]
     }
@@ -372,6 +418,10 @@ export default {
       const item = this.streamingUsingCellularItems.find((i) => i.value === this.settings.streamingUsingCellular)
       return item?.text || 'Error'
     },
+    androidAutoBrowseSeriesSequenceOrderOption() {
+      const item = this.androidAutoBrowseSeriesSequenceOrderItems.find((i) => i.value === this.settings.androidAutoBrowseSeriesSequenceOrder)
+      return item?.text || 'Error'
+    },
     moreMenuItems() {
       if (this.moreMenuSetting === 'shakeSensitivity') return this.shakeSensitivityItems
       else if (this.moreMenuSetting === 'hapticFeedback') return this.hapticFeedbackItems
@@ -379,6 +429,7 @@ export default {
       else if (this.moreMenuSetting === 'theme') return this.themeOptionItems
       else if (this.moreMenuSetting === 'downloadUsingCellular') return this.downloadUsingCellularItems
       else if (this.moreMenuSetting === 'streamingUsingCellular') return this.streamingUsingCellularItems
+      else if (this.moreMenuSetting === 'androidAutoBrowseSeriesSequenceOrder') return this.androidAutoBrowseSeriesSequenceOrderItems
       return []
     }
   },
@@ -421,6 +472,10 @@ export default {
       this.moreMenuSetting = 'streamingUsingCellular'
       this.showMoreMenuDialog = true
     },
+    showAndroidAutoBrowseSeriesSequenceOrderOptions() {
+      this.moreMenuSetting = 'androidAutoBrowseSeriesSequenceOrder'
+      this.showMoreMenuDialog = true
+    },
     clickMenuAction(action) {
       this.showMoreMenuDialog = false
       if (this.moreMenuSetting === 'shakeSensitivity') {
@@ -441,6 +496,9 @@ export default {
       } else if (this.moreMenuSetting === 'streamingUsingCellular') {
         this.settings.streamingUsingCellular = action
         this.saveSettings()
+      } else if (this.moreMenuSetting === 'androidAutoBrowseSeriesSequenceOrder') {
+        this.settings.androidAutoBrowseSeriesSequenceOrder = action
+        this.saveSettings()
       }
     },
     saveTheme(theme) {
@@ -449,6 +507,12 @@ export default {
     },
     autoSleepTimerTimeUpdated(val) {
       if (!val) return // invalid times return falsy
+      this.saveSettings()
+    },
+    androidAutoBrowseLimitForGroupingUpdated(val) {
+      if (!val) return // invalid times return falsy
+      if (val > 1000) val = 1000
+      if (val < 30) val = 30
       this.saveSettings()
     },
     hapticFeedbackUpdated(val) {
@@ -495,6 +559,10 @@ export default {
     },
     toggleDisableSleepTimerResetFeedback() {
       this.settings.disableSleepTimerResetFeedback = !this.settings.disableSleepTimerResetFeedback
+      this.saveSettings()
+    },
+    toggleSleepTimerAlmostDoneChime() {
+      this.settings.enableSleepTimerAlmostDoneChime = !this.settings.enableSleepTimerAlmostDoneChime
       this.saveSettings()
     },
     toggleDisableAutoRewind() {
@@ -568,6 +636,7 @@ export default {
       this.settings.sleepTimerLength = !isNaN(deviceSettings.sleepTimerLength) ? deviceSettings.sleepTimerLength : 900000 // 15 minutes
       this.settings.disableSleepTimerFadeOut = !!deviceSettings.disableSleepTimerFadeOut
       this.settings.disableSleepTimerResetFeedback = !!deviceSettings.disableSleepTimerResetFeedback
+      this.settings.enableSleepTimerAlmostDoneChime = !!deviceSettings.enableSleepTimerAlmostDoneChime
 
       this.settings.autoSleepTimerAutoRewind = !!deviceSettings.autoSleepTimerAutoRewind
       this.settings.autoSleepTimerAutoRewindTime = !isNaN(deviceSettings.autoSleepTimerAutoRewindTime) ? deviceSettings.autoSleepTimerAutoRewindTime : 300000 // 5 minutes
@@ -576,6 +645,9 @@ export default {
 
       this.settings.downloadUsingCellular = deviceSettings.downloadUsingCellular || 'ALWAYS'
       this.settings.streamingUsingCellular = deviceSettings.streamingUsingCellular || 'ALWAYS'
+
+      this.settings.androidAutoBrowseLimitForGrouping = deviceSettings.androidAutoBrowseLimitForGrouping
+      this.settings.androidAutoBrowseSeriesSequenceOrder = deviceSettings.androidAutoBrowseSeriesSequenceOrder || 'ASC'
     },
     async init() {
       this.loading = true

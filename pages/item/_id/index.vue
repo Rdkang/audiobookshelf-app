@@ -14,7 +14,7 @@
       </div>
       <div class="relative" @click="showFullscreenCover = true">
         <covers-book-cover :library-item="libraryItem" :width="coverWidth" :book-cover-aspect-ratio="bookCoverAspectRatio" no-bg raw @imageLoaded="coverImageLoaded" />
-        <div v-if="!isPodcast" class="absolute bottom-0 left-0 h-1 shadow-sm z-10" :class="userIsFinished ? 'bg-success' : 'bg-yellow-400'" :style="{ width: coverWidth * progressPercent + 'px' }"></div>
+        <div v-if="!isPodcast" class="absolute bottom-0 left-0 h-1 z-10 box-shadow-progressbar" :class="userIsFinished ? 'bg-success' : 'bg-yellow-400'" :style="{ width: coverWidth * progressPercent + 'px' }"></div>
       </div>
     </div>
 
@@ -31,15 +31,13 @@
           <div class="flex items-center justify-center">
             <h1 class="text-xl font-semibold">{{ title }}</h1>
             <widgets-explicit-indicator v-if="isExplicit" />
+            <widgets-abridged-indicator v-if="isAbridged" />
           </div>
           <p v-if="subtitle" class="text-fg text-base">{{ subtitle }}</p>
         </div>
 
         <div v-if="hasLocal" class="mx-1">
-          <div v-if="isLocalOnly" class="w-full rounded-md bg-warning/10 border border-warning p-4">
-            <p class="text-sm">{{ $strings.MessageMediaNotLinkedToServer }}</p>
-          </div>
-          <div v-else-if="currentServerConnectionConfigId && !isLocalMatchingServerAddress" class="w-full rounded-md bg-warning/10 border border-warning p-4">
+          <div v-if="currentServerConnectionConfigId && !isLocalMatchingServerAddress" class="w-full rounded-md bg-warning/10 border border-warning p-4">
             <p class="text-sm">{{ $getString('MessageMediaLinkedToADifferentServer', [localLibraryItem.serverAddress]) }}</p>
           </div>
           <div v-else-if="currentServerConnectionConfigId && !isLocalMatchingUser" class="w-full rounded-md bg-warning/10 border border-warning p-4">
@@ -54,20 +52,24 @@
         <div class="col-span-full">
           <div v-if="showPlay || showRead" class="flex mt-4 -mx-1">
             <ui-btn v-if="showPlay" color="success" class="flex items-center justify-center flex-grow mx-1" :loading="playerIsStartingForThisMedia" :padding-x="4" @click="playClick">
-              <span class="material-icons">{{ playerIsPlaying ? 'pause' : 'play_arrow' }}</span>
+              <span class="material-symbols text-2xl fill">{{ playerIsPlaying ? 'pause' : 'play_arrow' }}</span>
               <span class="px-1 text-sm">{{ playerIsPlaying ? $strings.ButtonPause : isPodcast ? $strings.ButtonNextEpisode : hasLocal ? $strings.ButtonPlay : $strings.ButtonStream }}</span>
             </ui-btn>
             <ui-btn v-if="showRead" color="info" class="flex items-center justify-center mx-1" :class="showPlay ? '' : 'flex-grow'" :padding-x="2" @click="readBook">
-              <span class="material-icons">auto_stories</span>
+              <span class="material-symbols text-2xl">auto_stories</span>
               <span v-if="!showPlay" class="px-2 text-base">{{ $strings.ButtonRead }} {{ ebookFormat }}</span>
             </ui-btn>
             <ui-btn v-if="showDownload" :color="downloadItem ? 'warning' : 'primary'" class="flex items-center justify-center mx-1" :padding-x="2" @click="downloadClick">
-              <span class="material-icons" :class="downloadItem || startingDownload ? 'animate-pulse' : ''">{{ downloadItem || startingDownload ? 'downloading' : 'download' }}</span>
+              <span class="material-symbols text-2xl" :class="downloadItem || startingDownload ? 'animate-pulse' : ''">{{ downloadItem || startingDownload ? 'downloading' : 'download' }}</span>
             </ui-btn>
             <ui-btn color="primary" class="flex items-center justify-center mx-1" :padding-x="2" @click="moreButtonPress">
-              <span class="material-icons">more_vert</span>
+              <span class="material-symbols text-2xl">more_vert</span>
             </ui-btn>
           </div>
+          <ui-btn v-else-if="isMissing" color="error" :padding-x="4" small class="mt-4 flex items-center justify-center w-full" @click="clickMissingButton">
+            <span class="material-symbols">error</span>
+            <span class="px-1 text-base">{{ $strings.LabelMissing }}</span>
+          </ui-btn>
 
           <div v-if="!isPodcast && progressPercent > 0" class="px-4 py-2 bg-primary text-sm font-semibold rounded-md text-fg mt-4 text-center">
             <p>{{ $strings.LabelYourProgress }}: {{ Math.round(progressPercent * 100) }}%</p>
@@ -135,11 +137,11 @@
         </div>
 
         <div v-if="description" class="w-full py-2">
-          <p ref="description" class="text-sm text-justify whitespace-pre-line font-light" :class="{ 'line-clamp-4': !showFullDescription }" style="hyphens: auto">{{ description }}</p>
+          <div ref="description" class="default-style less-spacing text-sm text-justify whitespace-pre-line font-light" :class="{ 'line-clamp-4': !showFullDescription }" style="hyphens: auto" v-html="description" />
 
           <div v-if="descriptionClamped" class="text-fg text-sm py-2" @click="showFullDescription = !showFullDescription">
-            {{ showFullDescription ? 'Read less' : 'Read more' }}
-            <span class="material-icons align-middle text-base -mt-px">{{ showFullDescription ? 'expand_less' : 'expand_more' }}</span>
+            {{ showFullDescription ? $strings.ButtonReadLess : $strings.ButtonReadMore }}
+            <span class="material-symbols !align-middle text-base -mt-px">{{ showFullDescription ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
           </div>
         </div>
 
@@ -188,7 +190,7 @@ export default {
       if (libraryItem?.libraryItemId?.startsWith('li_')) {
         // Detect old library item id
         console.error('Local library item has old server library item id', libraryItem.libraryItemId)
-      } else if (query.noredirect !== '1' && libraryItem?.libraryItemId && libraryItem?.serverAddress === store.getters['user/getServerAddress'] && store.state.networkConnected) {
+      } else if (query.noredirect !== '1' && libraryItem?.libraryItemId && libraryItem?.serverAddress === store.getters['user/getServerAddress'] && store.state.socketConnected) {
         const queryParams = new URLSearchParams()
         queryParams.set('localLibraryItemId', libraryItemId)
         if (libraryItem.mediaType === 'podcast') {
@@ -236,10 +238,6 @@ export default {
     isLocal() {
       return this.libraryItem.isLocal
     },
-    isLocalOnly() {
-      // TODO: Remove the possibility to have local only on android
-      return this.isLocal && !this.libraryItem.libraryItemId
-    },
     hasLocal() {
       // Server library item has matching local library item
       return this.isLocal || this.libraryItem.localLibraryItem
@@ -278,21 +276,21 @@ export default {
      * User is currently connected to a server and this local library item has the same server address
      */
     isLocalMatchingServerAddress() {
-      if (this.isLocalOnly || !this.localLibraryItem || !this.currentServerAddress) return false
+      if (!this.localLibraryItem || !this.currentServerAddress) return false
       return this.localLibraryItem.serverAddress === this.currentServerAddress
     },
     /**
      * User is currently connected to a server and this local library item has the same user id
      */
     isLocalMatchingUser() {
-      if (this.isLocalOnly || !this.localLibraryItem || !this.user) return false
+      if (!this.localLibraryItem || !this.user) return false
       return this.localLibraryItem.serverUserId === this.user.id || this.localLibraryItem.serverUserId === this.user.oldUserId
     },
     /**
      * User is currently connected to a server and this local library item has the same connection config id
      */
     isLocalMatchingConnectionConfig() {
-      if (this.isLocalOnly || !this.localLibraryItemServerConnectionConfigId || !this.currentServerConnectionConfigId) return false
+      if (!this.localLibraryItemServerConnectionConfigId || !this.currentServerConnectionConfigId) return false
       return this.localLibraryItemServerConnectionConfigId === this.currentServerConnectionConfigId
     },
     bookCoverAspectRatio() {
@@ -365,9 +363,6 @@ export default {
     },
     user() {
       return this.$store.state.user.user
-    },
-    userToken() {
-      return this.$store.getters['user/getToken']
     },
     userItemProgress() {
       if (this.isPodcast) return null
@@ -444,6 +439,9 @@ export default {
     isExplicit() {
       return !!this.mediaMetadata.explicit
     },
+    isAbridged() {
+      return !!this.mediaMetadata.abridged
+    },
     showPlay() {
       return !this.isMissing && !this.isInvalid && (this.numTracks || this.episodes.length)
     },
@@ -489,6 +487,13 @@ export default {
     }
   },
   methods: {
+    clickMissingButton() {
+      Dialog.alert({
+        title: this.$strings.LabelMissing,
+        message: this.$strings.MessageItemMissing,
+        cancelText: this.$strings.ButtonOk
+      })
+    },
     async coverImageLoaded(fullCoverUrl) {
       if (!fullCoverUrl) return
 
@@ -609,7 +614,7 @@ export default {
       this.download(localFolder)
     },
     async downloadClick() {
-      if (this.downloadItem || this.startingDownload)  return
+      if (this.downloadItem || this.startingDownload) return
 
       const hasPermission = await this.checkCellularPermission('download')
       if (!hasPermission) return

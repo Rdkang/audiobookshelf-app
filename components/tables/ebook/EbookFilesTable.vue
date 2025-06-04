@@ -7,7 +7,7 @@
       </div>
       <div class="flex-grow" />
       <div class="h-10 w-10 rounded-full flex justify-center items-center duration-500" :class="showFiles ? 'transform rotate-180' : ''">
-        <span class="material-icons text-3xl">expand_more</span>
+        <span class="material-symbols text-3xl">arrow_drop_down</span>
       </div>
     </div>
     <transition name="slide">
@@ -49,9 +49,6 @@ export default {
   computed: {
     libraryItemId() {
       return this.libraryItem.id
-    },
-    userToken() {
-      return this.$store.getters['user/getToken']
     },
     ebookFiles() {
       return (this.libraryItem.libraryFiles || []).filter((lf) => lf.fileType === 'ebook')

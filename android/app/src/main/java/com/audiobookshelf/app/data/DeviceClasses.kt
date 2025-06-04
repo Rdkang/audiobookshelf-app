@@ -28,6 +28,10 @@ enum class StreamingUsingCellularSetting {
   ASK, ALWAYS, NEVER
 }
 
+enum class AndroidAutoBrowseSeriesSequenceOrderSetting {
+  ASC, DESC
+}
+
 data class ServerConnectionConfig(
   var id:String,
   var index:Int,
@@ -131,9 +135,12 @@ data class DeviceSettings(
   var sleepTimerLength: Long, // Time in milliseconds
   var disableSleepTimerFadeOut: Boolean,
   var disableSleepTimerResetFeedback: Boolean,
+  var enableSleepTimerAlmostDoneChime: Boolean,
   var languageCode: String,
   var downloadUsingCellular: DownloadUsingCellularSetting,
-  var streamingUsingCellular: StreamingUsingCellularSetting
+  var streamingUsingCellular: StreamingUsingCellularSetting,
+  var androidAutoBrowseLimitForGrouping: Int,
+  var androidAutoBrowseSeriesSequenceOrder: AndroidAutoBrowseSeriesSequenceOrderSetting
 ) {
   companion object {
     // Static method to get default device settings
@@ -157,9 +164,12 @@ data class DeviceSettings(
         autoSleepTimerAutoRewindTime = 300000L, // 5 minutes
         disableSleepTimerFadeOut = false,
         disableSleepTimerResetFeedback = false,
+        enableSleepTimerAlmostDoneChime = false,
         languageCode = "en-us",
         downloadUsingCellular = DownloadUsingCellularSetting.ALWAYS,
-        streamingUsingCellular = StreamingUsingCellularSetting.ALWAYS
+        streamingUsingCellular = StreamingUsingCellularSetting.ALWAYS,
+        androidAutoBrowseLimitForGrouping = 100,
+        androidAutoBrowseSeriesSequenceOrder = AndroidAutoBrowseSeriesSequenceOrderSetting.ASC
       )
     }
   }
@@ -180,9 +190,9 @@ data class DeviceSettings(
 
   @JsonIgnore
   fun getShakeThresholdGravity() : Float { // Used in ShakeDetector
-    return if (shakeSensitivity == ShakeSensitivitySetting.VERY_HIGH) 1.2f
-    else if (shakeSensitivity == ShakeSensitivitySetting.HIGH) 1.4f
-    else if (shakeSensitivity == ShakeSensitivitySetting.MEDIUM) 1.6f
+    return if (shakeSensitivity == ShakeSensitivitySetting.VERY_HIGH) 1.1f
+    else if (shakeSensitivity == ShakeSensitivitySetting.HIGH) 1.3f
+    else if (shakeSensitivity == ShakeSensitivitySetting.MEDIUM) 1.5f
     else if (shakeSensitivity == ShakeSensitivitySetting.LOW) 2f
     else if (shakeSensitivity == ShakeSensitivitySetting.VERY_LOW) 2.7f
     else {

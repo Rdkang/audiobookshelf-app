@@ -8,7 +8,8 @@
     </template>
 
     <div v-show="!entities.length && initialized" class="w-full py-16 text-center text-xl">
-      <div class="py-4 capitalize">No {{ entityName }}</div>
+      <div v-if="page === 'collections'" class="py-4">{{ $strings.MessageNoCollections }}</div>
+      <div v-else class="py-4 capitalize">No {{ entityName }}</div>
       <ui-btn v-if="hasFilter" @click="clearFilter">{{ $strings.ButtonClearFilter }}</ui-btn>
     </div>
   </div>
@@ -104,8 +105,18 @@ export default {
       return this.$store.getters['libraries/getBookCoverAspectRatio']
     },
     bookWidth() {
-      var coverSize = 100
-      if (window.innerWidth <= 375) coverSize = 90
+      const availableWidth = window.innerWidth - 16
+      let coverSize = 100
+
+      // Smaller screens fill width with 2 items per row
+      if (availableWidth <= 400) {
+        coverSize = Math.floor(availableWidth / 2 - 24)
+        if (coverSize < 120) {
+          // Fallback to 1 item per row
+          coverSize = Math.min(availableWidth - 24, 200)
+        }
+        if (this.isCoverSquareAspectRatio || this.entityName === 'playlists') coverSize /= 1.6
+      }
 
       if (this.isCoverSquareAspectRatio || this.entityName === 'playlists') return coverSize * 1.6
       return coverSize

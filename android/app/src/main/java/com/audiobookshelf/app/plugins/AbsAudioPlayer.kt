@@ -180,7 +180,8 @@ class AbsAudioPlayer : Plugin() {
     val playWhenReady = call.getBoolean("playWhenReady") == true
     val playbackRate = call.getFloat("playbackRate",1f) ?: 1f
     val startTimeOverride = call.getDouble("startTime")
-    Log.d(tag, "prepareLibraryItem lid=$libraryItemId, startTimeOverride=$startTimeOverride, playbackRate=$playbackRate")
+
+    AbsLogger.info("AbsAudioPlayer", "prepareLibraryItem: lid=$libraryItemId, startTimeOverride=$startTimeOverride, playbackRate=$playbackRate")
 
     if (libraryItemId.isEmpty()) {
       Log.e(tag, "Invalid call to play library item no library item id")
@@ -197,6 +198,9 @@ class AbsAudioPlayer : Plugin() {
             Log.e(tag, "prepareLibraryItem: Podcast episode not found $episodeId")
             return call.resolve(JSObject("{\"error\":\"Podcast episode not found\"}"))
           }
+        }
+        if (!it.hasTracks(episode)) {
+          return call.resolve(JSObject("{\"error\":\"No audio files found on device. Download book again to fix.\"}"))
         }
 
         Handler(Looper.getMainLooper()).post {
