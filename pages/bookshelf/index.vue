@@ -1,12 +1,12 @@
 <template>
   <div class="w-full h-full min-h-full relative">
-    <div v-if="attemptingConnection" class="w-full pt-4 flex items-center justify-center">
-      <widgets-loading-spinner />
-      <p class="pl-4">{{ $strings.MessageAttemptingServerConnection }}</p>
+    <div v-if="attemptingConnection" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 px-4 py-3 bg-gray-800 bg-opacity-75 backdrop-blur-sm rounded-lg flex items-center justify-center max-w-xs">
+      <widgets-loading-spinner class="w-4 h-4 mr-3" />
+      <p class="text-sm font-medium text-white">{{ $strings.MessageAttemptingServerConnection }}</p>
     </div>
-    <div v-if="shelves.length && isLoading" class="w-full pt-4 flex items-center justify-center">
-      <widgets-loading-spinner />
-      <p class="pl-4">{{ $strings.MessageLoadingServerData }}</p>
+    <div v-if="shelves.length && isLoading" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 px-4 py-3 bg-gray-800 bg-opacity-75 backdrop-blur-sm rounded-lg flex items-center justify-center max-w-xs">
+      <widgets-loading-spinner class="w-4 h-4 mr-3" />
+      <p class="text-sm font-medium text-white">{{ $strings.MessageLoadingServerData }}</p>
     </div>
 
     <div class="w-full" :class="{ 'py-6': altViewEnabled }">
