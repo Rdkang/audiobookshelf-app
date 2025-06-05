@@ -9,23 +9,21 @@
 
     <p class="text-sm mb-4 text-fg-muted">{{ $strings.LabelMediaType }}: {{ mediaType }}</p>
 
-    <p class="mb-2 text-base text-fg">{{ $strings.HeaderLocalLibraryItems }} ({{ localLibraryItems.length }})</p>
+    <p class="mb-2 text-base text-md-sys-color-on-surface">{{ $strings.HeaderLocalLibraryItems }} ({{ localLibraryItems.length }})</p>
 
     <div class="w-full media-item-container overflow-y-auto">
-      <template v-for="localLibraryItem in localLibraryItems">
-        <nuxt-link :to="`/localMedia/item/${localLibraryItem.id}`" :key="localLibraryItem.id" class="flex my-1">
-          <div class="w-12 h-12 min-w-12 min-h-12 bg-primary">
-            <img v-if="localLibraryItem.coverPathSrc" :src="localLibraryItem.coverPathSrc" class="w-full h-full object-contain" />
-          </div>
-          <div class="flex-grow px-2">
-            <p class="text-sm">{{ localLibraryItem.media.metadata.title }}</p>
-            <p class="text-xs text-fg-muted">{{ getLocalLibraryItemSubText(localLibraryItem) }}</p>
-          </div>
-          <div class="w-12 h-12 flex items-center justify-center">
-            <span class="material-symbols text-xl text-fg-muted">arrow_right</span>
-          </div>
-        </nuxt-link>
-      </template>
+      <nuxt-link v-for="localLibraryItem in localLibraryItems" :key="localLibraryItem.id" :to="`/localMedia/item/${localLibraryItem.id}`" class="flex my-1">
+        <div class="w-12 h-12 min-w-12 min-h-12 bg-md-sys-color-surface-container">
+          <img v-if="localLibraryItem.coverPathSrc" :src="localLibraryItem.coverPathSrc" class="w-full h-full object-contain" />
+        </div>
+        <div class="flex-grow px-2">
+          <p class="text-sm">{{ localLibraryItem.media.metadata.title }}</p>
+          <p class="text-xs text-md-sys-color-on-surface-variant">{{ getLocalLibraryItemSubText(localLibraryItem) }}</p>
+        </div>
+        <div class="w-12 h-12 flex items-center justify-center">
+          <span class="material-symbols text-xl text-md-sys-color-on-surface-variant">arrow_right</span>
+        </div>
+      </nuxt-link>
     </div>
 
     <modals-dialog v-model="showDialog" :items="dialogItems" @action="dialogAction" />

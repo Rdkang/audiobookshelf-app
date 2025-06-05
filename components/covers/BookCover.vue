@@ -1,7 +1,7 @@
 <template>
   <div class="relative rounded-sm overflow-hidden" :style="{ height: height + 'px', width: width + 'px', maxWidth: width + 'px', minWidth: width + 'px' }">
-    <div class="w-full h-full relative" :class="{ 'bg-bg': !noBg }">
-      <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-primary">
+    <div class="w-full h-full relative" :class="{ 'bg-md-sys-color-surface': !noBg }">
+      <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-md-sys-color-surface-container">
         <div class="absolute cover-bg" ref="coverBg" />
       </div>
       <img v-if="fullCoverUrl" ref="cover" :src="fullCoverUrl" loading="lazy" @error="imageError" @load="imageLoaded" class="w-full h-full absolute top-0 left-0 z-10 duration-300 transition-opacity" :style="{ opacity: imageReady ? 1 : 0 }" :class="(showCoverBg && hasCover) || noBg ? 'object-contain' : 'object-fill'" />

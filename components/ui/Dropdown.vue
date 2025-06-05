@@ -1,24 +1,22 @@
 <template>
   <div class="relative w-full" v-click-outside="clickedOutside">
-    <p class="text-sm font-semibold" :class="disabled ? 'text-fg-muted' : ''">{{ label }}</p>
-    <button type="button" :disabled="disabled" class="relative w-full border border-border rounded shadow-sm pl-3 pr-8 py-2 text-left focus:outline-none text-sm" :class="buttonClass" aria-haspopup="listbox" aria-expanded="true" @click.stop.prevent="clickShowMenu">
-      <span class="flex items-center" :class="!selectedText ? 'text-fg-muted' : 'text-fg'">
+    <p class="text-sm font-semibold text-md-sys-color-on-surface" :class="disabled ? 'text-md-sys-color-on-surface-variant opacity-60' : ''">{{ label }}</p>
+    <button type="button" :disabled="disabled" class="relative w-full border border-md-sys-color-outline rounded-shape-corner-extra-small shadow-elevation-1 pl-3 pr-8 py-2 text-left focus:outline-none text-sm material-you-transition" :class="buttonClass" aria-haspopup="listbox" aria-expanded="true" @click.stop.prevent="clickShowMenu">
+      <span class="flex items-center" :class="!selectedText ? 'text-md-sys-color-on-surface-variant' : 'text-md-sys-color-on-surface'">
         <span class="block truncate" :class="small ? 'text-sm' : ''">{{ selectedText || placeholder || '' }}</span>
       </span>
       <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-        <span class="material-symbols">arrow_drop_down</span>
+        <span class="material-symbols text-md-sys-color-on-surface-variant">arrow_drop_down</span>
       </span>
     </button>
 
     <transition name="menu">
-      <ul v-show="showMenu" class="absolute z-10 -mt-px w-full bg-primary border border-border shadow-lg max-h-56 rounded-b-md py-1 ring-1 ring-bg ring-opacity-5 overflow-auto focus:outline-none text-sm" role="listbox">
-        <template v-for="item in items">
-          <li :key="item.value" class="text-fg select-none relative py-2 cursor-pointer hover:bg-black-400" role="option" @click="clickedOption(item.value)">
-            <div class="flex items-center">
-              <span class="font-normal ml-3 block truncate font-sans text-sm">{{ item.text }}</span>
-            </div>
-          </li>
-        </template>
+      <ul v-show="showMenu" class="absolute z-10 -mt-px w-full bg-md-sys-color-surface-container border border-md-sys-color-outline shadow-elevation-2 max-h-56 rounded-shape-corner-extra-small py-1 ring-1 ring-md-sys-color-outline ring-opacity-5 overflow-auto focus:outline-none text-sm" role="listbox">
+        <li v-for="item in items" :key="item.value" class="text-md-sys-color-on-surface select-none relative py-2 cursor-pointer material-you-state-layer hover:bg-md-sys-color-secondary-container/20" role="option" @click="clickedOption(item.value)">
+          <div class="flex items-center">
+            <span class="font-normal ml-3 block truncate font-sans text-sm">{{ item.text }}</span>
+          </div>
+        </li>
       </ul>
     </transition>
   </div>
@@ -65,8 +63,8 @@ export default {
       if (this.small) classes.push('h-9')
       else classes.push('h-10')
 
-      if (this.disabled) classes.push('cursor-not-allowed border-border bg-primary bg-opacity-70 border-opacity-70 text-fg-muted')
-      else classes.push('cursor-pointer border-border bg-primary text-fg')
+      if (this.disabled) classes.push('cursor-not-allowed bg-md-sys-color-surface-variant opacity-60 border-md-sys-color-outline text-md-sys-color-on-surface-variant')
+      else classes.push('cursor-pointer bg-md-sys-color-surface text-md-sys-color-on-surface focus:border-md-sys-color-primary')
 
       return classes.join(' ')
     }

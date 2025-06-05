@@ -1,13 +1,13 @@
 <template>
   <modals-modal v-model="show" width="90%">
-    <div class="w-full h-full bg-primary rounded-lg border border-fg/20">
-      <ul class="w-full rounded-lg text-base" role="listbox" aria-labelledby="listbox-label">
+    <div class="w-full h-full bg-md-sys-color-surface-container rounded-shape-corner-extra-large elevation-3">
+      <ul class="w-full rounded-shape-corner-extra-large text-base" role="listbox" aria-labelledby="listbox-label">
         <template v-for="item in items">
-          <li :key="item.value" class="text-fg select-none relative py-4 pr-9 cursor-pointer" :class="item.value === selected ? 'bg-bg bg-opacity-50' : ''" role="option" @click="clickedOption(item.value)">
+          <li :key="item.value" class="text-md-sys-color-on-surface select-none relative py-4 pr-12 cursor-pointer material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12" :class="item.value === selected ? 'bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container' : ''" role="option" @click="clickedOption(item.value)">
             <div class="flex items-center">
-              <span class="font-normal ml-3 block truncate text-lg">{{ item.text }}</span>
+              <span class="font-normal ml-4 block truncate text-lg" :class="item.value === selected ? 'text-md-sys-color-on-secondary-container' : 'text-md-sys-color-on-surface'">{{ item.text }}</span>
             </div>
-            <span v-if="item.value === selected" class="text-yellow-300 absolute inset-y-0 right-0 flex items-center pr-4">
+            <span v-if="item.value === selected" class="absolute inset-y-0 right-0 flex items-center pr-4" :class="item.value === selected ? 'text-md-sys-color-on-secondary-container' : 'text-md-sys-color-primary'">
               <span class="material-symbols text-3xl">{{ descending ? 'south' : 'north' }}</span>
             </span>
           </li>

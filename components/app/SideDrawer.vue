@@ -1,34 +1,34 @@
 <template>
   <div class="fixed top-0 left-0 right-0 layout-wrapper w-full z-50 overflow-hidden pointer-events-none">
-    <div class="absolute top-0 left-0 w-full h-full bg-black transition-opacity duration-200" :class="show ? 'bg-opacity-60 pointer-events-auto' : 'bg-opacity-0'" @click="clickBackground" />
-    <div class="absolute top-0 right-0 w-64 h-full bg-bg transform transition-transform py-6 pointer-events-auto" :class="show ? '' : 'translate-x-64'" @click.stop>
-      <div class="px-6 mb-4">
-        <p v-if="user" class="text-base">
+    <div class="absolute top-0 left-0 w-full h-full bg-md-sys-color-scrim transition-opacity duration-200" :class="show ? 'bg-opacity-60 pointer-events-auto' : 'bg-opacity-0'" @click="clickBackground" />
+    <div class="absolute top-0 right-0 w-80 h-full bg-md-sys-color-surface-container transform transition-transform py-6 pointer-events-auto shadow-elevation-3" :class="show ? '' : 'translate-x-80'" @click.stop>
+      <div class="px-6 mb-6">
+        <p v-if="user" class="text-md-sys-color-on-surface text-lg">
           Welcome,
-          <strong>{{ username }}</strong>
+          <strong class="text-md-sys-color-primary">{{ username }}</strong>
         </p>
       </div>
 
       <div class="w-full overflow-y-auto">
         <template v-for="item in navItems">
-          <button v-if="item.action" :key="item.text" class="w-full hover:bg-bg/60 flex items-center py-3 px-6 text-fg-muted" @click="clickAction(item.action)">
-            <span class="material-symbols fill text-lg">{{ item.icon }}</span>
-            <p class="pl-4">{{ item.text }}</p>
+          <button v-if="item.action" :key="item.text" class="w-full material-you-state-layer rounded-shape-corner-large mx-3 mb-1 flex items-center py-3 px-4 text-md-sys-color-on-surface-variant" @click="clickAction(item.action)">
+            <span class="material-symbols fill text-xl">{{ item.icon }}</span>
+            <p class="pl-4 text-sm font-medium">{{ item.text }}</p>
           </button>
-          <nuxt-link v-else :to="item.to" :key="item.text" class="w-full hover:bg-bg/60 flex items-center py-3 px-6 text-fg" :class="currentRoutePath.startsWith(item.to) ? 'bg-bg-hover/50' : 'text-fg-muted'">
-            <span class="material-symbols fill text-lg">{{ item.icon }}</span>
-            <p class="pl-4">{{ item.text }}</p>
+          <nuxt-link v-else :to="item.to" :key="item.text" class="w-full material-you-state-layer rounded-shape-corner-large mx-3 mb-1 flex items-center py-3 px-4" :class="currentRoutePath.startsWith(item.to) ? 'bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container' : 'text-md-sys-color-on-surface-variant'">
+            <span class="material-symbols fill text-xl">{{ item.icon }}</span>
+            <p class="pl-4 text-sm font-medium">{{ item.text }}</p>
           </nuxt-link>
         </template>
       </div>
-      <div class="absolute bottom-0 left-0 w-full py-6 px-6 text-fg">
+      <div class="absolute bottom-0 left-0 w-full py-6 px-6 text-md-sys-color-on-surface-variant">
         <div v-if="serverConnectionConfig" class="mb-4 flex justify-center">
-          <p class="text-xs text-fg-muted" style="word-break: break-word">{{ serverConnectionConfig.address }} (v{{ serverSettings.version }})</p>
+          <p class="text-xs text-md-sys-color-on-surface-variant" style="word-break: break-word">{{ serverConnectionConfig.address }} (v{{ serverSettings.version }})</p>
         </div>
         <div class="flex items-center">
           <p class="text-xs">{{ $config.version }}</p>
           <div class="flex-grow" />
-          <div v-if="user" class="flex items-center" @click="disconnect">
+          <div v-if="user" class="flex items-center material-you-state-layer rounded-shape-corner-small px-2 py-1 cursor-pointer" @click="disconnect">
             <p class="text-xs pr-2">{{ $strings.ButtonDisconnect }}</p>
             <i class="material-symbols text-sm -mb-0.5">cloud_off</i>
           </div>

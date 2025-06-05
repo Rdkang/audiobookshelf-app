@@ -102,7 +102,7 @@ export default {
 
       if (showCoverBg) {
         var coverbgwrapper = document.createElement('div')
-        coverbgwrapper.className = 'absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-primary'
+        coverbgwrapper.className = 'absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-md-sys-color-surface-container'
 
         var coverbg = document.createElement('div')
         coverbg.className = 'absolute cover-bg'
@@ -131,7 +131,7 @@ export default {
 
       var innerP = document.createElement('p')
       innerP.textContent = this.name
-      innerP.className = 'text-smtext-white'
+      innerP.className = 'text-sm text-md-sys-color-on-surface'
       imgdiv.appendChild(innerP)
 
       return imgdiv

@@ -1,15 +1,15 @@
 <template>
-  <nuxt-link v-if="to" :to="to" class="btn outline-none rounded-md shadow-md relative border border-border text-center" :disabled="disabled || loading" :class="classList">
+  <nuxt-link v-if="to" :to="to" class="btn material-you-transition material-you-state-layer outline-none rounded-shape-corner-large shadow-elevation-1 relative border-0 text-center" :disabled="disabled || loading" :class="classList">
     <slot />
-    <div v-if="loading" class="text-fg absolute top-0 left-0 w-full h-full flex items-center justify-center">
+    <div v-if="loading" class="text-current absolute top-0 left-0 w-full h-full flex items-center justify-center">
       <svg class="animate-spin" style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
       </svg>
     </div>
   </nuxt-link>
-  <button v-else class="btn outline-none rounded-md shadow-md relative border border-border" :disabled="disabled || loading" :type="type" :class="classList" @mousedown.prevent @click="click">
+  <button v-else class="btn material-you-transition material-you-state-layer outline-none rounded-shape-corner-large shadow-elevation-1 relative border-0" :disabled="disabled || loading" :type="type" :class="classList" @mousedown.prevent @click="click">
     <slot />
-    <div v-if="loading" class="text-fg absolute top-0 left-0 w-full h-full flex items-center justify-center">
+    <div v-if="loading" class="text-current absolute top-0 left-0 w-full h-full flex items-center justify-center">
       <svg class="animate-spin" style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
       </svg>
@@ -24,6 +24,11 @@ export default {
     color: {
       type: String,
       default: 'primary'
+    },
+    variant: {
+      type: String,
+      default: 'filled', // filled, outlined, text, tonal
+      validator: (value) => ['filled', 'outlined', 'text', 'tonal'].includes(value)
     },
     type: {
       type: String,
@@ -42,17 +47,39 @@ export default {
     classList() {
       var list = []
       if (this.loading) list.push('text-opacity-0')
-      if (this.color === 'success') {
-        list.push('text-white')
+
+      // Material You button variants
+      if (this.variant === 'filled') {
+        if (this.color === 'primary') {
+          list.push('bg-md-sys-color-primary text-md-sys-color-on-primary')
+        } else if (this.color === 'secondary') {
+          list.push('bg-md-sys-color-secondary text-md-sys-color-on-secondary')
+        } else if (this.color === 'error') {
+          list.push('bg-md-sys-color-error text-md-sys-color-on-error')
+        } else {
+          list.push(`bg-${this.color} text-white`)
+        }
+      } else if (this.variant === 'tonal') {
+        if (this.color === 'primary') {
+          list.push('bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container')
+        } else if (this.color === 'secondary') {
+          list.push('bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container')
+        } else if (this.color === 'error') {
+          list.push('bg-md-sys-color-error-container text-md-sys-color-on-error-container')
+        }
+      } else if (this.variant === 'outlined') {
+        list.push('bg-transparent border border-md-sys-color-outline text-md-sys-color-primary')
+      } else if (this.variant === 'text') {
+        list.push('bg-transparent text-md-sys-color-primary')
       }
-      list.push(`bg-${this.color}`)
+
       if (this.small) {
         list.push('text-sm')
-        if (this.paddingX === undefined) list.push('px-4')
-        if (this.paddingY === undefined) list.push('py-1')
+        if (this.paddingX === undefined) list.push('px-6')
+        if (this.paddingY === undefined) list.push('py-2')
       } else {
         if (this.paddingX === undefined) list.push('px-8')
-        if (this.paddingY === undefined) list.push('py-2')
+        if (this.paddingY === undefined) list.push('py-3')
       }
       if (this.paddingX !== undefined) {
         list.push(`px-${this.paddingX}`)
@@ -61,7 +88,7 @@ export default {
         list.push(`py-${this.paddingY}`)
       }
       if (this.disabled) {
-        list.push('cursor-not-allowed')
+        list.push('cursor-not-allowed opacity-38')
       }
       return list
     }
@@ -76,21 +103,5 @@ export default {
 </script>
 
 <style>
-.btn::before {
-  content: '';
-  position: absolute;
-  border-radius: 6px;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0);
-  transition: all 0.1s ease-in-out;
-}
-.btn:hover:not(:disabled)::before {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-button:disabled::before {
-  background-color: rgba(0, 0, 0, 0.2);
-}
+/* Material You button styles are handled via Tailwind classes and material-you.css */
 </style>

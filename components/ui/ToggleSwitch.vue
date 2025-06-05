@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="border rounded-full border-gray-400 flex items-center cursor-pointer w-10 justify-start" :class="className" @click.stop="clickToggle">
-      <span class="rounded-full border w-5 h-5 border-gray-100 shadow transform transition-transform duration-100" :class="switchClassName"></span>
+    <div class="border-2 rounded-full flex items-center cursor-pointer w-12 h-7 justify-start material-you-transition p-0.5" :class="className" @click.stop="clickToggle">
+      <span class="rounded-full w-5 h-5 shadow-elevation-1 transform transition-transform duration-200 material-you-transition" :class="switchClassName"></span>
     </div>
   </div>
 </template>
@@ -30,11 +30,17 @@ export default {
       }
     },
     className() {
-      if (this.disabled) return this.toggleValue ? `bg-${this.onColor} cursor-not-allowed` : `bg-${this.offColor} cursor-not-allowed`
-      return this.toggleValue ? `bg-${this.onColor}` : `bg-${this.offColor}`
+      if (this.toggleValue) {
+        return this.disabled ? 'bg-md-sys-color-primary border-md-sys-color-primary cursor-not-allowed opacity-38' : 'bg-md-sys-color-primary border-md-sys-color-primary'
+      } else {
+        return this.disabled ? 'bg-md-sys-color-surface-variant border-md-sys-color-outline cursor-not-allowed opacity-38' : 'bg-md-sys-color-surface-variant border-md-sys-color-outline'
+      }
     },
     switchClassName() {
-      var bgColor = this.disabled ? 'bg-gray-300' : 'bg-white'
+      var bgColor = this.toggleValue ? 'bg-md-sys-color-on-primary' : 'bg-md-sys-color-outline'
+      if (this.disabled) {
+        bgColor = this.toggleValue ? 'bg-md-sys-color-surface' : 'bg-md-sys-color-on-surface'
+      }
       return this.toggleValue ? 'translate-x-5 ' + bgColor : bgColor
     }
   },

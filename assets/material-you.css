@@ -1,0 +1,234 @@
+/* Material You Color System */
+:root {
+  /* Light theme colors - default */
+  --md-sys-color-primary: 103 80 164;
+  --md-sys-color-on-primary: 255 255 255;
+  --md-sys-color-primary-container: 234 221 255;
+  --md-sys-color-on-primary-container: 33 0 93;
+
+  --md-sys-color-secondary: 98 91 113;
+  --md-sys-color-on-secondary: 255 255 255;
+  --md-sys-color-secondary-container: 232 222 248;
+  --md-sys-color-on-secondary-container: 30 25 43;
+
+  --md-sys-color-tertiary: 125 82 96;
+  --md-sys-color-on-tertiary: 255 255 255;
+  --md-sys-color-tertiary-container: 255 216 228;
+  --md-sys-color-on-tertiary-container: 55 17 30;
+
+  --md-sys-color-error: 186 26 26;
+  --md-sys-color-on-error: 255 255 255;
+  --md-sys-color-error-container: 255 218 214;
+  --md-sys-color-on-error-container: 65 0 2;
+
+  --md-sys-color-surface: 255 251 255;
+  --md-sys-color-on-surface: 28 27 31;
+  --md-sys-color-surface-variant: 231 224 236;
+  --md-sys-color-on-surface-variant: 73 69 78;
+
+  --md-sys-color-surface-container-lowest: 255 255 255;
+  --md-sys-color-surface-container-low: 247 242 250;
+  --md-sys-color-surface-container: 243 237 247;
+  --md-sys-color-surface-container-high: 236 230 240;
+  --md-sys-color-surface-container-highest: 230 224 233;
+
+  --md-sys-color-outline: 121 116 126;
+  --md-sys-color-outline-variant: 202 196 208;
+
+  --md-sys-color-inverse-surface: 49 48 51;
+  --md-sys-color-inverse-on-surface: 244 239 244;
+  --md-sys-color-inverse-primary: 208 188 255;
+
+  --md-sys-color-shadow: 0 0 0;
+  --md-sys-color-scrim: 0 0 0;
+}
+
+/* Dark theme colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: 208 188 255;
+    --md-sys-color-on-primary: 54 21 116;
+    --md-sys-color-primary-container: 79 55 139;
+    --md-sys-color-on-primary-container: 234 221 255;
+
+    --md-sys-color-secondary: 204 194 220;
+    --md-sys-color-on-secondary: 51 45 65;
+    --md-sys-color-secondary-container: 74 68 88;
+    --md-sys-color-on-secondary-container: 232 222 248;
+
+    --md-sys-color-tertiary: 225 187 200;
+    --md-sys-color-on-tertiary: 76 37 50;
+    --md-sys-color-tertiary-container: 100 58 72;
+    --md-sys-color-on-tertiary-container: 255 216 228;
+
+    --md-sys-color-error: 255 180 171;
+    --md-sys-color-on-error: 105 0 5;
+    --md-sys-color-error-container: 147 0 10;
+    --md-sys-color-on-error-container: 255 218 214;
+
+    --md-sys-color-surface: 16 16 20;
+    --md-sys-color-on-surface: 230 225 229;
+    --md-sys-color-surface-variant: 73 69 78;
+    --md-sys-color-on-surface-variant: 202 196 208;
+
+    --md-sys-color-surface-container-lowest: 11 11 13;
+    --md-sys-color-surface-container-low: 24 24 29;
+    --md-sys-color-surface-container: 28 27 31;
+    --md-sys-color-surface-container-high: 38 37 41;
+    --md-sys-color-surface-container-highest: 49 48 51;
+
+    --md-sys-color-outline: 147 143 153;
+    --md-sys-color-outline-variant: 73 69 78;
+
+    --md-sys-color-inverse-surface: 230 225 229;
+    --md-sys-color-inverse-on-surface: 49 48 51;
+    --md-sys-color-inverse-primary: 103 80 164;
+
+    --md-sys-color-shadow: 0 0 0;
+    --md-sys-color-scrim: 0 0 0;
+  }
+}
+
+/* Force dark theme class */
+.dark {
+  --md-sys-color-primary: 208 188 255;
+  --md-sys-color-on-primary: 54 21 116;
+  --md-sys-color-primary-container: 79 55 139;
+  --md-sys-color-on-primary-container: 234 221 255;
+
+  --md-sys-color-secondary: 204 194 220;
+  --md-sys-color-on-secondary: 51 45 65;
+  --md-sys-color-secondary-container: 74 68 88;
+  --md-sys-color-on-secondary-container: 232 222 248;
+
+  --md-sys-color-tertiary: 225 187 200;
+  --md-sys-color-on-tertiary: 76 37 50;
+  --md-sys-color-tertiary-container: 100 58 72;
+  --md-sys-color-on-tertiary-container: 255 216 228;
+
+  --md-sys-color-error: 255 180 171;
+  --md-sys-color-on-error: 105 0 5;
+  --md-sys-color-error-container: 147 0 10;
+  --md-sys-color-on-error-container: 255 218 214;
+
+  --md-sys-color-surface: 16 16 20;
+  --md-sys-color-on-surface: 230 225 229;
+  --md-sys-color-surface-variant: 73 69 78;
+  --md-sys-color-on-surface-variant: 202 196 208;
+
+  --md-sys-color-surface-container-lowest: 11 11 13;
+  --md-sys-color-surface-container-low: 24 24 29;
+  --md-sys-color-surface-container: 28 27 31;
+  --md-sys-color-surface-container-high: 38 37 41;
+  --md-sys-color-surface-container-highest: 49 48 51;
+
+  --md-sys-color-outline: 147 143 153;
+  --md-sys-color-outline-variant: 73 69 78;
+
+  --md-sys-color-inverse-surface: 230 225 229;
+  --md-sys-color-inverse-on-surface: 49 48 51;
+  --md-sys-color-inverse-primary: 103 80 164;
+
+  --md-sys-color-shadow: 0 0 0;
+  --md-sys-color-scrim: 0 0 0;
+}
+
+/* Material You Typography Scale */
+:root {
+  --md-sys-typescale-display-large-font-size: 57px;
+  --md-sys-typescale-display-large-line-height: 64px;
+  --md-sys-typescale-display-large-font-weight: 400;
+
+  --md-sys-typescale-display-medium-font-size: 45px;
+  --md-sys-typescale-display-medium-line-height: 52px;
+  --md-sys-typescale-display-medium-font-weight: 400;
+
+  --md-sys-typescale-display-small-font-size: 36px;
+  --md-sys-typescale-display-small-line-height: 44px;
+  --md-sys-typescale-display-small-font-weight: 400;
+
+  --md-sys-typescale-headline-large-font-size: 32px;
+  --md-sys-typescale-headline-large-line-height: 40px;
+  --md-sys-typescale-headline-large-font-weight: 400;
+
+  --md-sys-typescale-headline-medium-font-size: 28px;
+  --md-sys-typescale-headline-medium-line-height: 36px;
+  --md-sys-typescale-headline-medium-font-weight: 400;
+
+  --md-sys-typescale-headline-small-font-size: 24px;
+  --md-sys-typescale-headline-small-line-height: 32px;
+  --md-sys-typescale-headline-small-font-weight: 400;
+
+  --md-sys-typescale-title-large-font-size: 22px;
+  --md-sys-typescale-title-large-line-height: 28px;
+  --md-sys-typescale-title-large-font-weight: 400;
+
+  --md-sys-typescale-title-medium-font-size: 16px;
+  --md-sys-typescale-title-medium-line-height: 24px;
+  --md-sys-typescale-title-medium-font-weight: 500;
+
+  --md-sys-typescale-title-small-font-size: 14px;
+  --md-sys-typescale-title-small-line-height: 20px;
+  --md-sys-typescale-title-small-font-weight: 500;
+
+  --md-sys-typescale-body-large-font-size: 16px;
+  --md-sys-typescale-body-large-line-height: 24px;
+  --md-sys-typescale-body-large-font-weight: 400;
+
+  --md-sys-typescale-body-medium-font-size: 14px;
+  --md-sys-typescale-body-medium-line-height: 20px;
+  --md-sys-typescale-body-medium-font-weight: 400;
+
+  --md-sys-typescale-body-small-font-size: 12px;
+  --md-sys-typescale-body-small-line-height: 16px;
+  --md-sys-typescale-body-small-font-weight: 400;
+
+  --md-sys-typescale-label-large-font-size: 14px;
+  --md-sys-typescale-label-large-line-height: 20px;
+  --md-sys-typescale-label-large-font-weight: 500;
+
+  --md-sys-typescale-label-medium-font-size: 12px;
+  --md-sys-typescale-label-medium-line-height: 16px;
+  --md-sys-typescale-label-medium-font-weight: 500;
+
+  --md-sys-typescale-label-small-font-size: 11px;
+  --md-sys-typescale-label-small-line-height: 16px;
+  --md-sys-typescale-label-small-font-weight: 500;
+}
+
+/* Material You utilities */
+.material-you-transition {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  transition-duration: 150ms;
+}
+
+.material-you-state-layer {
+  position: relative;
+  overflow: hidden;
+}
+
+.material-you-state-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+  pointer-events: none;
+}
+
+.material-you-state-layer:hover::before {
+  opacity: 0.08;
+}
+
+.material-you-state-layer:focus::before {
+  opacity: 0.12;
+}
+
+.material-you-state-layer:active::before {
+  opacity: 0.16;
+}

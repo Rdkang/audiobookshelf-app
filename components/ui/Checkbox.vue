@@ -1,10 +1,10 @@
 <template>
-  <label class="flex justify-start items-center" :class="!disabled ? 'cursor-pointer' : ''">
-    <div class="border-2 rounded flex flex-shrink-0 justify-center items-center" :class="wrapperClass">
+  <label class="flex justify-start items-center material-you-state-layer rounded-shape-corner-extra-small p-1" :class="!disabled ? 'cursor-pointer' : ''">
+    <div class="border-2 rounded-shape-corner-extra-small flex flex-shrink-0 justify-center items-center material-you-transition" :class="wrapperClass">
       <input v-model="selected" :disabled="disabled" type="checkbox" class="opacity-0 absolute" :class="!disabled ? 'cursor-pointer' : ''" />
       <svg v-if="selected" class="fill-current pointer-events-none" :class="svgClass" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z" /></svg>
     </div>
-    <div v-if="label" class="select-none text-fg" :class="labelClassname">{{ label }}</div>
+    <div v-if="label" class="select-none text-md-sys-color-on-surface ml-3" :class="labelClassname">{{ label }}</div>
   </label>
 </template>
 
@@ -45,9 +45,19 @@ export default {
       }
     },
     wrapperClass() {
-      var classes = [`bg-${this.checkboxBg} border-${this.borderColor}`]
+      var classes = []
+      if (this.selected) {
+        classes.push('bg-md-sys-color-primary border-md-sys-color-primary')
+      } else {
+        classes.push('bg-md-sys-color-surface border-md-sys-color-outline')
+      }
+
       if (this.small) classes.push('w-4 h-4')
-      else classes.push('w-6 h-6')
+      else classes.push('w-5 h-5')
+
+      if (this.disabled) {
+        classes.push('opacity-38 cursor-not-allowed')
+      }
 
       return classes.join(' ')
     },
@@ -58,7 +68,7 @@ export default {
       return classes.join(' ')
     },
     svgClass() {
-      var classes = [`text-${this.checkColor}`]
+      var classes = ['text-md-sys-color-on-primary']
       if (this.small) classes.push('w-3 h-3')
       else classes.push('w-4 h-4')
 

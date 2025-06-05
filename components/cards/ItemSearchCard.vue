@@ -1,5 +1,17 @@
-<template>
-  <div class="flex h-full px-1 overflow-hidden">
+<  <div class="flex h-full px-1 overflow-hidden">
+    <covers-book-cover :library-item="libraryItem" :width="coverWidth" :book-cover-aspect-ratio="bookCoverAspectRatio" />
+    <div class="flex-grow px-2 audiobookSearchCardContent">
+      <p v-if="matchKey !== 'title'" class="truncate text-sm text-md-sys-color-on-surface">{{ title }}</p>
+      <p v-else class="truncate text-sm text-md-sys-color-on-surface" v-html="matchHtml" />
+
+      <p v-if="matchKey === 'subtitle'" class="truncate text-xs text-md-sys-color-on-surface-variant" v-html="matchHtml"></p>
+
+      <p v-if="matchKey !== 'authors'" class="text-xs text-md-sys-color-on-surface-variant truncate">by {{ authorName }}</p>
+      <p v-else class="truncate text-xs text-md-sys-color-on-surface-variant" v-html="matchHtml" />
+
+      <div v-if="matchKey === 'series' || matchKey === 'tags' || matchKey === 'isbn' || matchKey === 'asin' || matchKey === 'episode' || matchKey === 'narrators'" class="m-0 p-0 truncate text-xs text-md-sys-color-on-surface-variant" v-html="matchHtml" />
+    </div>
+  </div>iv class="flex h-full px-1 overflow-hidden">
     <covers-book-cover :library-item="libraryItem" :width="coverWidth" :book-cover-aspect-ratio="bookCoverAspectRatio" />
     <div class="flex-grow px-2 audiobookSearchCardContent">
       <p v-if="matchKey !== 'title'" class="truncate text-sm">{{ title }}</p>

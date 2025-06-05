@@ -1,14 +1,14 @@
 <template>
-  <div class="w-full h-16 bg-primary relative z-20">
-    <div id="appbar" class="absolute top-0 left-0 w-full h-full flex items-center px-2">
-      <nuxt-link v-show="!showBack" to="/" class="mr-3">
+  <div class="w-full h-16 bg-md-sys-color-surface-container shadow-elevation-2 relative z-20">
+    <div id="appbar" class="absolute top-0 left-0 w-full h-full flex items-center px-4">
+      <nuxt-link v-show="!showBack" to="/" class="mr-4">
         <img src="/Logo.png" class="h-10 w-10" />
       </nuxt-link>
-      <a v-if="showBack" @click="back" class="rounded-full h-10 w-10 flex items-center justify-center mr-2 cursor-pointer">
-        <span class="material-symbols text-3xl text-fg">arrow_back</span>
-      </a>
+      <button v-if="showBack" @click="back" class="material-you-state-layer rounded-full h-10 w-10 flex items-center justify-center mr-3 cursor-pointer text-md-sys-color-on-surface">
+        <span class="material-symbols text-3xl">arrow_back</span>
+      </button>
       <div v-if="user && currentLibrary">
-        <div class="pl-1.5 pr-2.5 py-2 bg-bg bg-opacity-30 rounded-md flex items-center" @click="clickShowLibraryModal">
+        <div class="pl-3 pr-4 py-2 bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container rounded-shape-corner-large flex items-center cursor-pointer material-you-state-layer" @click="clickShowLibraryModal">
           <ui-library-icon :icon="currentLibraryIcon" :size="4" font-size="base" />
           <p class="text-sm leading-4 ml-2 mt-0.5 max-w-24 truncate">{{ currentLibraryName }}</p>
         </div>
@@ -21,19 +21,19 @@
       <widgets-download-progress-indicator />
 
       <!-- Must be connected to a server to cast, only supports media items on server -->
-      <div v-show="isCastAvailable && user" class="mx-2 cursor-pointer flex items-center" @click="castClick">
+      <button v-show="isCastAvailable && user" class="mx-2 cursor-pointer flex items-center material-you-state-layer rounded-full h-10 w-10 justify-center text-md-sys-color-on-surface" @click="castClick">
         <span class="material-symbols text-2xl leading-none">
           {{ isCasting ? 'cast_connected' : 'cast' }}
         </span>
-      </div>
+      </button>
 
-      <nuxt-link v-if="user" class="mx-1.5 flex items-center h-10" to="/search">
+      <nuxt-link v-if="user" class="mx-1.5 flex items-center h-10 w-10 justify-center material-you-state-layer rounded-full text-md-sys-color-on-surface" to="/search">
         <span class="material-symbols text-2xl leading-none">search</span>
       </nuxt-link>
 
-      <div class="h-7 mx-1.5">
-        <span class="material-symbols" style="font-size: 1.75rem" @click="clickShowSideDrawer">menu</span>
-      </div>
+      <button class="h-10 w-10 mx-1.5 flex items-center justify-center material-you-state-layer rounded-full text-md-sys-color-on-surface" @click="clickShowSideDrawer">
+        <span class="material-symbols" style="font-size: 1.75rem">menu</span>
+      </button>
     </div>
   </div>
 </template>

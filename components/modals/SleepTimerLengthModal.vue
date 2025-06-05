@@ -2,7 +2,7 @@
   <modals-modal v-model="show" :width="200" height="100%">
     <template #outer>
       <div class="absolute top-8 left-4 z-40">
-        <p class="text-white text-2xl truncate">{{ $strings.HeaderSleepTimer }}</p>
+        <p class="text-md-sys-color-on-surface text-2xl truncate">{{ $strings.HeaderSleepTimer }}</p>
       </div>
     </template>
 
@@ -13,32 +13,30 @@
         manualTimerModal = false
       "
     >
-      <div class="w-full overflow-x-hidden overflow-y-auto bg-primary rounded-lg border border-white border-opacity-20" style="max-height: 75%" @click.stop>
+      <div class="w-full overflow-x-hidden overflow-y-auto bg-md-sys-color-surface-container rounded-shape-corner-extra-large elevation-3 material-you-transition" style="max-height: 75%" @click.stop>
         <div v-if="manualTimerModal" class="p-4">
-          <div class="flex mb-4" @click="manualTimerModal = false">
-            <span class="material-symbols text-3xl">arrow_back</span>
+          <div class="flex mb-4 cursor-pointer material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12 p-2 rounded-shape-corner-medium" @click="manualTimerModal = false">
+            <span class="material-symbols text-3xl text-md-sys-color-on-surface">arrow_back</span>
           </div>
-          <div class="flex my-2 justify-between">
+          <div class="flex my-2 justify-between items-center">
             <ui-btn @click="decreaseManualTimeout" class="w-9 h-9" :padding-x="0" small style="max-width: 36px"><span class="material-symbols">remove</span></ui-btn>
-            <p class="text-2xl font-mono text-center">{{ manualTimeoutMin }} min</p>
+            <p class="text-2xl font-mono text-center text-md-sys-color-on-surface">{{ manualTimeoutMin }} min</p>
             <ui-btn @click="increaseManualTimeout" class="w-9 h-9" :padding-x="0" small style="max-width: 36px"><span class="material-symbols">add</span></ui-btn>
           </div>
           <ui-btn @click="clickedOption(manualTimeoutMin)" class="w-full">{{ $strings.ButtonSetTimer }}</ui-btn>
         </div>
         <ul v-else class="h-full w-full" role="listbox" aria-labelledby="listbox-label">
-          <template v-for="timeout in timeouts">
-            <li :key="timeout" class="text-fg select-none relative py-4" role="option" @click="clickedOption(timeout)">
-              <div class="flex items-center justify-center">
-                <span class="font-normal block truncate text-lg">{{ timeout }} min</span>
-              </div>
-            </li>
-          </template>
-          <li class="text-fg select-none relative py-4" role="option" @click="clickedChapterOption">
+          <li v-for="timeout in timeouts" :key="timeout" class="text-md-sys-color-on-surface select-none relative py-4 cursor-pointer material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12" role="option" @click="clickedOption(timeout)">
+            <div class="flex items-center justify-center">
+              <span class="font-normal block truncate text-lg">{{ timeout }} min</span>
+            </div>
+          </li>
+          <li class="text-md-sys-color-on-surface select-none relative py-4 cursor-pointer material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12" role="option" @click="clickedChapterOption">
             <div class="flex items-center justify-center">
               <span class="font-normal block truncate text-lg text-center">{{ $strings.LabelEndOfChapter }}</span>
             </div>
           </li>
-          <li class="text-fg select-none relative py-4" role="option" @click="manualTimerModal = true">
+          <li class="text-md-sys-color-on-surface select-none relative py-4 cursor-pointer material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12" role="option" @click="manualTimerModal = true">
             <div class="flex items-center justify-center">
               <span class="font-normal block truncate text-lg text-center">{{ $strings.LabelCustomTime }}</span>
             </div>

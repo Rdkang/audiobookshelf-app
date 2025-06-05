@@ -2,11 +2,11 @@
   <modals-modal v-model="show" :width="'90%'" :max-width="'420px'" height="100%">
     <template #outer>
       <div class="absolute top-5 left-4 z-40">
-        <p class="text-white text-2xl truncate">Custom Headers</p>
+        <p class="text-md-sys-color-on-surface text-2xl truncate">Custom Headers</p>
       </div>
     </template>
     <div class="w-full h-full overflow-hidden absolute top-0 left-0 flex items-center justify-center" @click="show = false">
-      <div ref="container" class="w-full rounded-lg bg-primary border border-white border-opacity-20 overflow-y-auto overflow-x-hidden" style="max-height: 80vh" @click.stop>
+      <div ref="container" class="w-full rounded-shape-corner-extra-large bg-md-sys-color-surface-container elevation-3 material-you-transition overflow-y-auto overflow-x-hidden" style="max-height: 80vh" @click.stop>
         <div class="w-full h-full p-4" v-if="showAddHeader">
           <div class="mb-4">
             <ui-icon-btn icon="arrow_back" borderless @click="showAddHeader = false" />
@@ -19,17 +19,17 @@
           </form>
         </div>
         <div class="w-full h-full p-4" v-else>
-          <template v-for="[key, value] in Object.entries(headersCopy)">
-            <div :key="key" class="w-full rounded-lg bg-white bg-opacity-5 py-2 pl-4 pr-12 relative mb-2">
-              <p class="text-base font-semibold text-gray-200 leading-5">{{ key }}</p>
-              <p class="text-sm text-gray-400">{{ value }}</p>
+          <div v-for="[key, value] in Object.entries(headersCopy)" :key="key" class="w-full rounded-shape-corner-large bg-md-sys-color-surface-container-high py-2 pl-4 pr-12 relative mb-2 material-you-transition">
+            <p class="text-base font-semibold text-md-sys-color-on-surface leading-5">{{ key }}</p>
+            <p class="text-sm text-md-sys-color-on-surface-variant">{{ value }}</p>
 
-              <div class="absolute top-0 bottom-0 right-0 h-full p-4 flex items-center justify-center text-error">
-                <button @click="removeHeader(key)"><span class="material-symbols text-lg">delete</span></button>
-              </div>
+            <div class="absolute top-0 bottom-0 right-0 h-full p-4 flex items-center justify-center text-md-sys-color-error">
+              <button @click="removeHeader(key)" class="material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12 p-1 rounded-shape-corner-small">
+                <span class="material-symbols text-lg">delete</span>
+              </button>
             </div>
-          </template>
-          <p v-if="!Object.keys(headersCopy).length" class="py-4 text-center">No Custom Headers</p>
+          </div>
+          <p v-if="!Object.keys(headersCopy).length" class="py-4 text-center text-md-sys-color-on-surface-variant">No Custom Headers</p>
 
           <div class="w-full flex justify-center pt-4">
             <ui-btn @click="showAddHeader = true" class="w-full">Add Custom Header</ui-btn>

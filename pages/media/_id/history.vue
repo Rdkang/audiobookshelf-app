@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full px-3 py-4 overflow-y-auto relative bg-bg">
+  <div class="w-full h-full px-3 py-4 overflow-y-auto relative bg-md-sys-color-surface">
     <p class="mb-4 text-lg font-semibold">History for {{ displayTitle }}</p>
 
     <div v-if="!mediaEvents.length" class="text-center py-8">

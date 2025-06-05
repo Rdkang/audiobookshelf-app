@@ -1,8 +1,8 @@
 <template>
-  <div class="inline-flex">
-    <input v-model="input" type="range" :min="min" :max="max" :step="step" :style="{ width: inputWidth }" />
+  <div class="inline-flex items-center">
+    <input v-model="input" type="range" :min="min" :max="max" :step="step" :style="{ width: inputWidth }" class="material-you-range-input" />
 
-    <p class="text-xs ml-2">{{ input }}%</p>
+    <p class="text-xs ml-2 text-md-sys-color-on-surface-variant">{{ input }}%</p>
   </div>
 </template>
 
@@ -37,54 +37,103 @@ export default {
 </script>
 
 <style scoped>
-input[type='range'] {
+.material-you-range-input {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
   cursor: pointer;
+  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
 }
-input[type='range']:focus {
+
+.material-you-range-input:focus {
   outline: none;
 }
 
-/* chromium */
-input[type='range']::-webkit-slider-runnable-track {
-  background-color: rgb(var(--color-track) / 0.5);
-  border-radius: 9999px;
-  height: 0.75rem;
+.material-you-range-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
 }
-input[type='range']::-webkit-slider-thumb {
+
+/* chromium */
+.material-you-range-input::-webkit-slider-runnable-track {
+  background-color: var(--md-sys-color-secondary-container);
+  border-radius: 9999px;
+  height: 0.25rem;
+  border: none;
+}
+
+.material-you-range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  margin-top: -0.25rem;
-  border-radius: 9999px;
-  background-color: rgb(var(--color-track-cursor));
-  height: 1.25rem;
-  width: 1.25rem;
+  margin-top: -0.375rem;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary);
+  height: 1rem;
+  width: 1rem;
+  border: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
 }
-input[type='range']:focus::-webkit-slider-thumb {
-  border: 1px solid rgb(var(--color-track));
-  outline: 3px solid rgb(var(--color-track));
-  outline-offset: 0.125rem;
+
+.material-you-range-input:hover::-webkit-slider-thumb {
+  background-color: var(--md-sys-color-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: scale(1.1);
+}
+
+.material-you-range-input:focus::-webkit-slider-thumb {
+  background-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
+  outline: none;
+}
+
+.material-you-range-input:active::-webkit-slider-thumb {
+  transform: scale(1.2);
 }
 
 /* firefox */
-input[type='range']::-moz-range-track {
-  background-color: rgb(var(--color-track) / 0.5);
+.material-you-range-input::-moz-range-track {
+  background-color: var(--md-sys-color-secondary-container);
   border-radius: 9999px;
-  height: 0.75rem;
-}
-input[type='range']::-moz-range-thumb {
+  height: 0.25rem;
   border: none;
-  border-radius: 9999px;
-  margin-top: -0.25rem;
-  background-color: rgb(var(--color-track-cursor));
-  height: 1.25rem;
-  width: 1.25rem;
 }
-input[type='range']:focus::-moz-range-thumb {
-  border: 1px solid rgb(var(--color-track));
-  outline: 3px solid rgb(var(--color-track));
-  outline-offset: 0.125rem;
+
+.material-you-range-input::-moz-range-thumb {
+  border: none;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary);
+  height: 1rem;
+  width: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.material-you-range-input:hover::-moz-range-thumb {
+  background-color: var(--md-sys-color-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: scale(1.1);
+}
+
+.material-you-range-input:focus::-moz-range-thumb {
+  background-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
+  outline: none;
+}
+
+.material-you-range-input:active::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+.material-you-range-input:disabled::-webkit-slider-thumb,
+.material-you-range-input:disabled::-moz-range-thumb {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+
+.material-you-range-input:disabled::-webkit-slider-runnable-track,
+.material-you-range-input:disabled::-moz-range-track {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0.12;
 }
 </style>

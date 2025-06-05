@@ -1,11 +1,11 @@
 <template>
-  <button class="icon-btn rounded-md flex items-center justify-center h-9 w-9 relative" :disabled="disabled || loading" :class="className" :type="type" @mousedown.prevent @click="clickBtn">
-    <div v-if="loading" class="text-fg absolute top-0 left-0 w-full h-full flex items-center justify-center text-opacity-100">
+  <button class="icon-btn rounded-shape-corner-small flex items-center justify-center h-10 w-10 relative material-you-transition hover:bg-md-sys-color-on-surface/8 active:bg-md-sys-color-on-surface/12" :disabled="disabled || loading" :class="className" :type="type" @mousedown.prevent @click="clickBtn">
+    <div v-if="loading" class="text-md-sys-color-on-surface absolute top-0 left-0 w-full h-full flex items-center justify-center">
       <svg class="animate-spin" style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
       </svg>
     </div>
-    <span v-else class="material-symbols text-2xl" :class="{ fill: !outlined }" :style="{ fontSize }">{{ icon }}</span>
+    <span v-else class="material-symbols text-2xl text-md-sys-color-on-surface" :class="{ fill: !outlined }" :style="{ fontSize }">{{ icon }}</span>
   </button>
 </template>
 
@@ -33,7 +33,10 @@ export default {
     className() {
       var classes = []
       if (!this.borderless) {
-        classes.push(`bg-${this.bgColor} border border-gray-600`)
+        classes.push('bg-md-sys-color-surface-container border border-md-sys-color-outline')
+      }
+      if (this.disabled) {
+        classes.push('cursor-not-allowed opacity-38')
       }
       return classes.join(' ')
     },

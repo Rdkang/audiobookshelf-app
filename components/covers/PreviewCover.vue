@@ -1,12 +1,19 @@
 <template>
   <div class="relative rounded-sm" :style="{ height: width * bookCoverAspectRatio + 'px', width: width + 'px', maxWidth: width + 'px', minWidth: width + 'px' }" @mouseover="isHovering = true" @mouseleave="isHovering = false">
     <div class="w-full h-full relative overflow-hidden">
-      <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-primary">
+      <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-md-sys-color-surface-container">
         <div class="absolute cover-bg" ref="coverBg" />
       </div>
       <img ref="cover" :src="cover" @error="imageError" @load="imageLoaded" class="w-full h-full absolute top-0 left-0" :class="showCoverBg ? 'object-contain' : 'object-fill'" />
 
-      <a v-if="!imageFailed && showOpenNewTab && isHovering" :href="cover" @click.stop target="_blank" class="absolute bg-primary flex items-center justify-center shadow-sm rounded-full hover:scale-110 transform duration-100" :style="{ top: sizeMultiplier * 0.5 + 'rem', right: sizeMultiplier * 0.5 + 'rem', width: 2.5 * sizeMultiplier + 'rem', height: 2.5 * sizeMultiplier + 'rem' }">
+      <a
+        v-if="!imageFailed && showOpenNewTab && isHovering"
+        :href="cover"
+        @click.stop
+        target="_blank"
+        class="absolute bg-md-sys-color-surface-container-high flex items-center justify-center shadow-elevation-1 rounded-full hover:scale-110 transform duration-100 material-you-state-layer text-md-sys-color-on-surface"
+        :style="{ top: sizeMultiplier * 0.5 + 'rem', right: sizeMultiplier * 0.5 + 'rem', width: 2.5 * sizeMultiplier + 'rem', height: 2.5 * sizeMultiplier + 'rem' }"
+      >
         <span class="material-symbols" :style="{ fontSize: sizeMultiplier * 1.75 + 'rem' }">open_in_new</span>
       </a>
     </div>
@@ -18,7 +25,7 @@
       </div>
     </div>
 
-    <p v-if="!imageFailed && showResolution" class="absolute -bottom-5 left-0 right-0 mx-auto text-xs text-gray-300 text-center">{{ resolution }}</p>
+    <p v-if="!imageFailed && showResolution" class="absolute -bottom-5 left-0 right-0 mx-auto text-xs text-md-sys-color-on-surface-variant text-center">{{ resolution }}</p>
   </div>
 </template>
 

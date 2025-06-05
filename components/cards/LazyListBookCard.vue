@@ -3,7 +3,7 @@
     <div class="h-full flex relative">
       <div class="list-card-cover relative">
         <!-- When cover image does not fill -->
-        <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-primary">
+        <div v-show="showCoverBg" class="absolute top-0 left-0 w-full h-full overflow-hidden rounded-sm bg-md-sys-color-surface-container">
           <div class="absolute cover-bg" ref="coverBg" />
         </div>
 
